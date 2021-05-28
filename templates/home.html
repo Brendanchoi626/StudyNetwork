@@ -2,4 +2,13 @@
 
 {% block content %}
 <h1>Study Network home</h1>
-{% endblock %}
+{% for posts in post %}
+<ul>
+    <li>Title: {{ posts.title }}</li>
+    <li>Discussion: {{ posts.discussion}}</li>
+    <li>date: {{ posts.date }}</li>
+    <li>Likes: {{ posts.likes }}</li>
+</ul>
+{% endfor %}
+
+{% endblock %} 
