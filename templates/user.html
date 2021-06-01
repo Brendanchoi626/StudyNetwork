@@ -1,3 +1,17 @@
 {% extends 'layout.html' %}
 
-{% block content %}<h1>user page</h1>{% endblock %}
+{% block content %}<h1>user page</h1>
+<form method = 'POST' action="/user" name="user">
+    <!-- Form content -->
+    <label for='username_or_email'>username or email:</label>
+    <input type="text" placeholder="Enter Username" name="username_or_email" required><br>
+    
+    <label for='password'>password:</label>
+    <input type="password" placeholder="Enter password" name="password" required><br>
+    
+    <button type="submit" class="signupbutton">Sign in</button>
+</form>
+<p>{{error}}</p>
+<p>Don't have an account? <a href="/signup">sign up</a> right now!</p>
+
+{% endblock %}

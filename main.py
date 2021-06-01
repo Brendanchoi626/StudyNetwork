@@ -22,7 +22,6 @@ def home():
 def post():
     return render_template('post.html', title='post')
 
-
 @app.route('/noti/<int:id>')
 def noti(id):
 
@@ -30,8 +29,27 @@ def noti(id):
 
 
 @app.route('/profile/<int:id>')
-def user(id):
+def profile(id):
     return render_template('profile.html', title='profile')
+
+
+@app.route('/user', methods=['GET', 'POST'])
+def user():
+    usern = models.User.query.filter_by(username = request.form.get('username_or_email')).first()
+    email = models.User.query.filter_by(email = request.form.get('username_or_email')).first()
+    password = models.User.query.filter_by(password = request.form.get('password')).first()
+    if request.method == 'POST':
+        if usern == None:
+            if email == None:
+                return render_template('user.html', error = 'please check your username/password again')
+        elif password == None:
+            return render_template('user.html', erorr = 'please check your username/password again')
+        else:
+            if usern != None:
+                return render_template('profile.html', id = usern.id)
+            elif email != None:
+                return render_template('profile.html', id = email.id)
+    return render_template('user.html')
 
 
 @app.route('/signup', methods = ['GET', 'POST'])
@@ -55,7 +73,7 @@ def signup():#Signup route
             )
             db.session.add(user_info)
             db.session.commit()
-    return render_template('signup.html',title='signup')
+    return render_template('signup.html')
 
 
 if __name__ == "__main__":
