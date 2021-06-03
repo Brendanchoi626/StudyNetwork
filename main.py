@@ -1,7 +1,9 @@
 # imports
-from flask import Flask, render_template, request, session, redirect, url_for, Blueprint, flash
+from flask import Flask, render_template, request, session, redirect, url_for, Blueprint
+from flask_sqlalchemy.model import Model
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 #from main import db
 
@@ -30,25 +32,35 @@ def noti(id):
 
 @app.route('/profile/<int:id>')
 def profile(id):
-    return render_template('profile.html', title='profile')
+    user_id = models.User.query.filter_by(id = id).first()
+
+    return render_template('profile.html', user_id=user_id)
 
 
 @app.route('/user', methods=['GET', 'POST'])
 def user():
     usern = models.User.query.filter_by(username = request.form.get('username_or_email')).first()
-    email = models.User.query.filter_by(email = request.form.get('username_or_email')).first()
-    password = models.User.query.filter_by(password = request.form.get('password')).first()
+    usere = models.User.query.filter_by(email = request.form.get('username_or_email')).first()
+    password = request.form.get('password')
     if request.method == 'POST':
-        if usern == None:
-            if email == None:
-                return render_template('user.html', error = 'please check your username/password again')
-        elif password == None:
-            return render_template('user.html', erorr = 'please check your username/password again')
+        if usern == None and usere == None:
+            return render_template('user.html', error = 'please check your username/password again')
         else:
-            if usern != None:
-                return render_template('profile.html', id = usern.id)
-            elif email != None:
-                return render_template('profile.html', id = email.id)
+            try:
+                passwith = check_password_hash(usern.password, password)     
+                print('haha')                          
+            except:
+                passwith = check_password_hash(usere.password, password)
+                print('hoho')
+            finally:
+                if not passwith:
+                    print("hehe")
+                    return render_template('user.html', error = 'please check your username/password again') 
+
+        if usere == None:
+            return render_template('home.html', id=usern)
+        else:
+            return render_template('home.html', id=usere)
     return render_template('user.html')
 
 
@@ -68,7 +80,7 @@ def signup():#Signup route
 
                 username = request.form.get('username'),
                 email = request.form.get('email'),
-                password = request.form.get('password')
+                password = generate_password_hash(request.form.get('password'), method='sha256')
 
             )
             db.session.add(user_info)

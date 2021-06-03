@@ -2,6 +2,9 @@
 
 {% block content %}
 <h1>Study Network home</h1>
+{% if id %}
+    <h3>logged in as {{id.username}}</h3>
+{% endif %}
 {% for posts in post %}
 <ul>
     <li>Title: {{ posts.title }}</li>
