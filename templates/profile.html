@@ -5,6 +5,8 @@
 <p>user_id: {{ id }}</p>
 <p>username: {{ username }}</p>
 <p>email adress: {{ email }}</p>
+{{ post.posts_user|map(attribute="title")|join(', ') }}
+
 <button onclick="window.location = 'http://127.0.0.1:5000/logout'" type="submit">Logout</button>
 
 

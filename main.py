@@ -50,7 +50,9 @@ def profile():
     "Profile route. If the user is signed in, it returns the profile page with user info. Else returns signup page"
     if g.logged_in_user:
         user_info = sqlite_conn('data.db', 'SELECT * FROM User WHERE id = {}'.format(session['logged_in_user']), True)
-        return render_template('profile.html', id=user_info[0], username=user_info[1], email=user_info[2])
+        post_info = models.User.query.filter_by(id=session['logged_in_user']).first()
+        #posts = sqlite_conn('data.db', 'SELECT * FROM Post WHERE id = (SELECT Post_id FROM PostUser WHERE User_id = {})'.format(session['logged_in_user']), True)
+        return render_template('profile.html', id=user_info[0], username=user_info[1], email=user_info[2], post=post_info)
 
     return redirect(url_for('user'))
 
