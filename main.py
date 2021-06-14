@@ -5,6 +5,7 @@ from flask_sqlalchemy.model import Model
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
 
 
 def sqlite_conn(database, query, single=False):
@@ -30,13 +31,25 @@ import models
 def home():
     "The homepage route"
     post = models.Post.query.all()
-
     return render_template('home.html', post=post, title='home')
 
 
-@app.route('/post')
+@app.route('/post', methods=['GET', 'POST'])
 def post():
-    return render_template('post.html', title='post')
+    "Route for post. Allows the player to make new posts."
+    if request.method == 'POST':
+        post_info = models.Post(
+
+            title = request.form.get('title'),
+            discussion = request.form.get('discussion'),
+            date = date.today().strftime("%d%m%Y"),
+            likes = 0
+
+        )
+        db.session.add(post_info)
+        db.session.commit()
+
+    return render_template('post.html')
 
 
 @app.route('/noti/<int:id>')
@@ -121,7 +134,7 @@ def logout():
     "Route for logout."
     session.pop('logged_in_user', None)
 
-    return render_template('user.html')
+    return redirect(url_for('user'))
 
 
 @app.before_request

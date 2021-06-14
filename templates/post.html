@@ -1,3 +1,17 @@
 {% extends 'layout.html' %}
 
-{% block content %}<h1>post</h1>{% endblock %}
+{% block content %}
+<h1>post</h1>
+<form method = 'POST' action="/post" name="post">
+    <!-- Form content -->
+    <label for='title'>title:</label>
+    <input type="text" placeholder="Enter Title:" name="title" required><br>
+
+    <label for='discussion'>discussion</label>
+    <input type="text" placeholder="Enter description: " name="discussion" requried><br>
+
+    <button type="submit" class="post_button">Post</button>
+</form>
+<p>{{error}}</p>
+
+{% endblock %}
