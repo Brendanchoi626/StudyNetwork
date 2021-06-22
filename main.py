@@ -1,11 +1,13 @@
 # imports
 import sqlite3
 from flask import Flask, render_template, request, session, redirect, url_for, Blueprint, g, abort
+import flask_sqlalchemy
 from flask_sqlalchemy.model import Model
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
+from sqlalchemy import create_engine, insert
 
 
 def sqlite_conn(database, query, single=False):
@@ -37,7 +39,10 @@ def home():
 @app.route('/post', methods=['GET', 'POST'])
 def post():
     "Route for post. Allows the player to make new posts."
-    if request.method == 'POST':
+    if g.logged_in_user == None:
+        return redirect(url_for('user'))
+
+    elif request.method == 'POST':
         post_info = models.Post(
 
             title = request.form.get('title'),
@@ -46,10 +51,19 @@ def post():
             likes = 0
 
         )
+        
         db.session.add(post_info)
         db.session.commit()
 
+        h = sqlite_conn('data.db', 'SELECT id FROM Post WHERE title = "{}"'.format(request.form.get('title')))
+
+        conn = sqlite3.connect('data.db')
+        cur = conn.cursor() 
+        cur.execute('INSERT INTO PostUser (Post_id, User_id) VALUES ({}, {})'.format(h[-1][0], session['logged_in_user']))
+        conn.close()
     return render_template('post.html')
+        
+    
 
 
 @app.route('/noti/<int:id>')
