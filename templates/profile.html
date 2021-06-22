@@ -5,7 +5,12 @@
 <p>user_id: {{ id }}</p>
 <p>username: {{ username }}</p>
 <p>email adress: {{ email }}</p>
-<p>Posts: {{ post.posts_user|map(attribute="title")|join(', ') }}</p>
+<p>Posts:</p>
+{% for x in post %}
+    <p>{{x.title}}</p>
+{% endfor %}
+
+
 
 <button onclick="window.location = 'http://127.0.0.1:5000/logout'" type="submit">Logout</button>
 

@@ -16,9 +16,6 @@ UserNotification = db.Table('UserNotification', db.Model.metadata,
                     db.Column('Notification_id', db.Integer, db.ForeignKey('Notification.id')))
 
 
-PostUser = db.Table('PostUser', db.Model.metadata, 
-                    db.Column('Post_id', db.Integer, db.ForeignKey('Post.id')), 
-                    db.Column('User_id', db.Integer, db.ForeignKey('User.id')))
 
 
 class User(db.Model):
@@ -28,7 +25,7 @@ class User(db.Model):
     email = db.Column(db.Text)
     password = db.Column(db.Text)
 
-    posts_user = db.relationship('Post', secondary=PostUser, back_populates='users_post')
+    user_post = db.relationship('Post', back_populates='post_user')
     notifications_user = db.relationship('Notification', secondary=UserNotification, back_populates='users_notification')
 
 
@@ -48,8 +45,9 @@ class Post(db.Model):
     discussion = db.Column(db.Text)
     date = db.Column(db.Integer)
     likes = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
 
-    users_post = db.relationship('User', secondary=PostUser, back_populates='posts_user')
+    post_user = db.relationship('User', back_populates='user_post')
     replies_post = db.relationship('Reply', secondary=PostReply, back_populates='posts_reply')
     categories_post = db.relationship('Categories', secondary=PostCategory, back_populates='posts_category')
 

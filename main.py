@@ -7,7 +7,6 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
-from sqlalchemy import create_engine, insert
 
 
 def sqlite_conn(database, query, single=False):
@@ -33,7 +32,8 @@ import models
 def home():
     "The homepage route"
     post = models.Post.query.all()
-    return render_template('home.html', post=post, title='home')
+    user_info = sqlite_conn('data.db', 'SELECT * FROM User WHERE id = (SELECT user_id FROM Post)', True)
+    return render_template('home.html', post=post, user_info=user_info[1], title='home')
 
 
 @app.route('/post', methods=['GET', 'POST'])
@@ -48,23 +48,16 @@ def post():
             title = request.form.get('title'),
             discussion = request.form.get('discussion'),
             date = date.today().strftime("%d%m%Y"),
-            likes = 0
+            likes = 0,
+            user_id = session['logged_in_user']
 
         )
         
         db.session.add(post_info)
         db.session.commit()
 
-        h = sqlite_conn('data.db', 'SELECT id FROM Post WHERE title = "{}"'.format(request.form.get('title')))
-
-        conn = sqlite3.connect('data.db')
-        cur = conn.cursor() 
-        cur.execute('INSERT INTO PostUser (Post_id, User_id) VALUES ({}, {})'.format(h[-1][0], session['logged_in_user']))
-        conn.close()
     return render_template('post.html')
         
-    
-
 
 @app.route('/noti/<int:id>')
 def noti(id):
@@ -77,7 +70,8 @@ def profile():
     "Profile route. If the user is signed in, it returns the profile page with user info. Else returns signup page"
     if g.logged_in_user:
         user_info = sqlite_conn('data.db', 'SELECT * FROM User WHERE id = {}'.format(session['logged_in_user']), True)
-        post_info = models.User.query.filter_by(id=session['logged_in_user']).first()
+        post_info = models.Post.query.filter_by(user_id = session['logged_in_user']).all()
+        #post_info = models.User.query.filter_by(id=session['logged_in_user']).first()
         #posts = sqlite_conn('data.db', 'SELECT * FROM Post WHERE id = (SELECT Post_id FROM PostUser WHERE User_id = {})'.format(session['logged_in_user']), True)
         return render_template('profile.html', id=user_info[0], username=user_info[1], email=user_info[2], post=post_info)
 
