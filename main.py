@@ -25,6 +25,7 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 
 import models
+from forms import Sign_in, Sign_up
 
 #routes#
 
@@ -51,17 +52,24 @@ def post():
             likes = 0,
             user_id = session['logged_in_user']
 
-        )
-        
+        )      
         db.session.add(post_info)
         db.session.commit()
+
+        posts = models.Post.query.filter_by(user_id = session['logged_in_user']).all()
+        #aimpost = posts[-1][0]
+        category = request.form.get('categories')
+        #print(aimpost)
+        print(category)
+
+        
 
     return render_template('post.html')
         
 
-@app.route('/noti/<int:id>')
+@app.route('/noti')
 def noti(id):
-
+    
     return render_template('noti.html', title='noti')
 
 
@@ -110,7 +118,43 @@ def user():
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def signup():
-    "Sign up route. Allows you to create a new account with the input information if possible." 
+    "Sign up route. Allows you to create a new account with the input information if possible."
+    form = Sign_up()
+    if request.method == "GET": #If browser asked to see the page
+        return render_template('signup.html', form=form, title='sign_up')
+    
+    else:
+        if form.validate_on_submit():
+            if models.User.query.filter_by(username = request.form.get('username')).first() != None:
+                return render_template('signup.html', form=form, error = 'username already in use')
+
+            if models.User.query.filter_by(email = request.form.get('email')).first() != None:
+                return render_template('signup.html', form=form, error = 'email already in use')
+
+            if len(request.form.get('password')) < 8:
+                return render_template('signup.html', form=form, error='password must be atleast 8 letters')
+
+            if request.form.get('password') != request.form.get('re-password'):
+                return render_template('signup.html', form=form, error = 'your passwords do not match. Please try again')
+
+            else:# if possible, create an account. 
+                user_info = models.User(
+                    username = form.username.data,
+                    email = form.email.data,
+                    password = generate_password_hash(form.password.data, method='sha256')
+                )
+                db.session.add(user_info)
+                db.session.commit()
+                return redirect(url_for('user'))
+        
+        else:
+            return render_template('signup.html', form=form, title='sign_up')
+
+    
+
+    
+
+
     if request.method == 'POST':#Checks if the users can create a new account with input information
 
         if models.User.query.filter_by(username = request.form.get('username')).first() != None:
@@ -125,14 +169,7 @@ def signup():
         if request.form.get('password') != request.form.get('re-password'):
             return render_template('signup.html', error = 'your passwords do not match. Please try again')
 
-        else:# if possible, create an account. 
-            user_info = models.User(
-                username = request.form.get('username'),
-                email = request.form.get('email'),
-                password = generate_password_hash(request.form.get('password'), method='sha256')
-            )
-            db.session.add(user_info)
-            db.session.commit()
+        
 
     return render_template('signup.html')
 

@@ -17,7 +17,6 @@ UserNotification = db.Table('UserNotification', db.Model.metadata,
 
 
 
-
 class User(db.Model):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)

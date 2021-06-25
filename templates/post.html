@@ -10,8 +10,18 @@
     <label for='discussion'>discussion</label>
     <input type="text" placeholder="Enter description: " name="discussion" requried><br>
 
+    <label for='category'>Select the category associated with your post</label><br>      
+    <input type="checkbox" name="categories" value="Maths"> Maths<br>
+    <input type="checkbox" name="categories" value="Physics"> Physics<br>
+    <input type="checkbox" name="categories" value="Biology"> Biology<br>
+    <input type="checkbox" name="categories" value="Chemistry"> Chemistry<br>
+    <input type="checkbox" name="categories" value="English"> English<br>
+    <input type="checkbox" name="categories" value="Economics/Business"> Economics/Business<br>
+    <input type="checkbox" name="categories" value="Programming"> Programming<br>
+    <input type="checkbox" name="categories" value="Other"> Other<br>
+
     <button type="submit" class="post_button">Post</button>
 </form>
 <p>{{error}}</p>
 
-{% endblock %}
+{% endblock %} 
