@@ -2,21 +2,15 @@
 
 {% block content %}
 <h1>sign up</h1>
-<form method = 'POST' action="/signup" name="signup">
+<form method="POST" enctype="multipart/form-data">
     <!-- Form content -->
-    <label for='email'>email:</label>
-    <input type="text" placeholder="Enter Email" name="email" required><br>
-
-    <label for='username'>Username:</label>
-    <input type="text" placeholder="Enter Username" name="username" required><br>
     
-    <label for='password'>Password:</label>
-    <input type="password" placeholder="Enter password" name="password" required><br>
-
-    <label for='re_password'>Re-enter password</label>
-    <input type="password" placeholder="Confirm your password" name="re-password" required><br>
-    
-    <button type="submit" class="signupbutton">Sign Up</button>
+    {{ form.csrf_token }}
+    <p>Username: {{ form.username }} <span style="color:red">{{ form.username.errors }}</span></p>
+    <p>email: {{ form.email }} <span style="color:red">{{ form.email.errors }}</span></p>
+    <p>password: {{ form.password}} <span style="color:red">{{ form.password.errors }}</span></p>
+    <p>re-enter your password: {{ form.re_password }} <span style="color:red">{{ form.re_password.errors }}</span></p>
+    <input type="submit" value="Sign Up">
 </form>
-<p>{{error}}</p>
+{{ error }}
 {% endblock %}

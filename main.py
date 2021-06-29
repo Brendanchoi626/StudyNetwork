@@ -88,32 +88,38 @@ def profile():
 
 @app.route('/user', methods=['GET', 'POST'])
 def user():
-    "Sign in route. Checks if the user information is correct and redirects to profile page."
+    "Sign in route. Checks if the user information is correct and redirects to profile page."    
+    form = Sign_in()
     usern = models.User.query.filter_by(username = request.form.get('username_or_email')).first()
     usere = models.User.query.filter_by(email = request.form.get('username_or_email')).first()
     password = request.form.get('password')
-    if request.method == 'POST':
-        session.pop('logged_in_user', None)
-        #Check if the username/password is matching
-        if usern == None and usere == None:
-            return render_template('user.html', error = 'please check your username/password again')
-        else:
-            try:
-                passwith = check_password_hash(usern.password, password)                             
-            except:
-                passwith = check_password_hash(usere.password, password)
-            finally:
-                if not passwith:
-                    return render_template('user.html', error = 'please check your username/password again') 
-        #redirects profile if it matches
-        if usere == None:
-            session['logged_in_user'] = usern.id
-            return redirect(url_for('profile'))
-        else:
-            session['logged_in_user'] = usere.id
-            return redirect(url_for('profile'))
+    if request.method == "GET": #If browser asked to see the page
+        return render_template('user.html', form=form, title='user')
 
-    return render_template('user.html')
+    else:
+        if form.validate_on_submit():
+            session.pop('logged_in_user', None)
+            #Check if the username/password is matching
+            if usern == None and usere == None:
+                return render_template('user.html', form=form, error = 'please check your username/password again')
+            else:
+                try:
+                    passwith = check_password_hash(usern.password, password)                             
+                except:
+                    passwith = check_password_hash(usere.password, password)
+                finally:
+                    if not passwith:
+                        return render_template('user.html', form=form, error = 'please check your username/password again') 
+            #redirects profile if it matches
+            if usere == None:
+                session['logged_in_user'] = usern.id
+                return redirect(url_for('profile'))
+            else:
+                session['logged_in_user'] = usere.id
+                return redirect(url_for('profile'))
+
+        else:
+            return render_template('user.html', form=form, title='user')
 
 
 @app.route('/signup', methods = ['GET', 'POST'])
@@ -125,16 +131,16 @@ def signup():
     
     else:
         if form.validate_on_submit():
-            if models.User.query.filter_by(username = request.form.get('username')).first() != None:
+            if models.User.query.filter_by(username = form.username.data).first() != None:
                 return render_template('signup.html', form=form, error = 'username already in use')
 
-            if models.User.query.filter_by(email = request.form.get('email')).first() != None:
+            if models.User.query.filter_by(email = form.email.data).first() != None:
                 return render_template('signup.html', form=form, error = 'email already in use')
 
             if len(request.form.get('password')) < 8:
                 return render_template('signup.html', form=form, error='password must be atleast 8 letters')
 
-            if request.form.get('password') != request.form.get('re-password'):
+            if form.password.data != form.re_password.data:
                 return render_template('signup.html', form=form, error = 'your passwords do not match. Please try again')
 
             else:# if possible, create an account. 
@@ -145,33 +151,12 @@ def signup():
                 )
                 db.session.add(user_info)
                 db.session.commit()
+                
                 return redirect(url_for('user'))
         
         else:
             return render_template('signup.html', form=form, title='sign_up')
 
-    
-
-    
-
-
-    if request.method == 'POST':#Checks if the users can create a new account with input information
-
-        if models.User.query.filter_by(username = request.form.get('username')).first() != None:
-            return render_template('signup.html', error = 'username already in use')
-
-        if models.User.query.filter_by(email = request.form.get('email')).first() != None:
-            return render_template('signup.html', error = 'email already in use')
-
-        if len(request.form.get('password')) < 8:
-            return render_template('signup.html', error='password must be atleast 8 letters')
-
-        if request.form.get('password') != request.form.get('re-password'):
-            return render_template('signup.html', error = 'your passwords do not match. Please try again')
-
-        
-
-    return render_template('signup.html')
 
 
 @app.route('/logout')
