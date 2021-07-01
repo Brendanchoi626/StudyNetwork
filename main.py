@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
 
-
+#SQL query executer
 def sqlite_conn(database, query, single=False):
     "connects to a database and returns data"
     conn = sqlite3.connect(database)
@@ -24,8 +24,9 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 
+#imports from models.py and forms.py
 import models
-from forms import Sign_in, Sign_up
+from forms import Sign_in, Sign_up, Post
 
 #routes#
 
@@ -40,31 +41,43 @@ def home():
 @app.route('/post', methods=['GET', 'POST'])
 def post():
     "Route for post. Allows the player to make new posts."
+    form = Post()
     if g.logged_in_user == None:
         return redirect(url_for('user'))
+    elif request.method == 'GET':
+        return render_template('post.html', form=form, title='post')
 
-    elif request.method == 'POST':
-        post_info = models.Post(
-
-            title = request.form.get('title'),
-            discussion = request.form.get('discussion'),
-            date = date.today().strftime("%d%m%Y"),
-            likes = 0,
-            user_id = session['logged_in_user']
-
-        )      
-        db.session.add(post_info)
-        db.session.commit()
-
-        posts = models.Post.query.filter_by(user_id = session['logged_in_user']).all()
-        #aimpost = posts[-1][0]
-        category = request.form.get('categories')
-        #print(aimpost)
-        print(category)
+    else:
+        if form.validate_on_submit():
+            post_info = models.Post()
+            post_info.title = form.title.data
+            post_info.discussion = form.discussion.data
+            post_info.date = date.today().strftime("%d%m%Y")
+            post_info.likes = 0
+            post_info.user_id = session['logged_in_user'] 
+            db.session.add(post_info)
+            db.session.commit()
+            print(post_info.id)
+            post_info = db.session.merge(post_info)
+            li = []
+            for catego in form.category.data: 
+                print(catego)
+                category = models.Category.query.filter_by(id = catego).first()
+                #li.append(category)
+                post_info.categories_post.append(category)
+                db.session.merge(post_info)
+            #post_info.categories_post.extend(li)
+            print(post_info.categories_post)
+            #db.session.merge(post_info)
+            db.session.commit()
+            
+        
+            
 
         
+                        
 
-    return render_template('post.html')
+    return render_template('post.html', form=form, title='post')
         
 
 @app.route('/noti')
@@ -72,7 +85,7 @@ def noti(id):
     
     return render_template('noti.html', title='noti')
 
-
+ 
 @app.route('/profile')
 def profile():
     "Profile route. If the user is signed in, it returns the profile page with user info. Else returns signup page"

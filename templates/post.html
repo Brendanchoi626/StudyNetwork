@@ -2,25 +2,13 @@
 
 {% block content %}
 <h1>post</h1>
-<form method = 'POST' action="/post" name="post">
-    <!-- Form content -->
-    <label for='title'>title:</label>
-    <input type="text" placeholder="Enter Title:" name="title" required><br>
-
-    <label for='discussion'>discussion</label>
-    <input type="text" placeholder="Enter description: " name="discussion" requried><br>
-
-    <label for='category'>Select the category associated with your post</label><br>      
-    <input type="checkbox" name="categories" value="Maths"> Maths<br>
-    <input type="checkbox" name="categories" value="Physics"> Physics<br>
-    <input type="checkbox" name="categories" value="Biology"> Biology<br>
-    <input type="checkbox" name="categories" value="Chemistry"> Chemistry<br>
-    <input type="checkbox" name="categories" value="English"> English<br>
-    <input type="checkbox" name="categories" value="Economics/Business"> Economics/Business<br>
-    <input type="checkbox" name="categories" value="Programming"> Programming<br>
-    <input type="checkbox" name="categories" value="Other"> Other<br>
-
-    <button type="submit" class="post_button">Post</button>
+<form method="POST" enctype="multipart/form-data">
+    <!-- Form content -->   
+    {{ form.csrf_token }}
+    <p>Title: {{ form.title }} <span style="color:red">{{ form.title.errors }}</span></p>
+    <p>Discussion: {{ form.discussion }} <span style="color:red">{{ form.discussion.errors }}</span></p>
+    <p>{{ form.category }}</p>
+    <input type="submit" value="Post">
 </form>
 <p>{{error}}</p>
 

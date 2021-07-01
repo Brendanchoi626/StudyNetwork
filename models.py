@@ -3,7 +3,7 @@ from main import db
 
 PostCategory = db.Table('PostCategory', db.Model.metadata, 
                     db.Column('Post_id', db.Integer, db.ForeignKey('Post.id')), 
-                    db.Column('Categories_id', db.Integer, db.ForeignKey('Categories.id')))
+                    db.Column('Category_id', db.Integer, db.ForeignKey('Category.id')))
 
 
 PostReply = db.Table('PostReply', db.Model.metadata, 
@@ -48,7 +48,7 @@ class Post(db.Model):
 
     post_user = db.relationship('User', back_populates='user_post')
     replies_post = db.relationship('Reply', secondary=PostReply, back_populates='posts_reply')
-    categories_post = db.relationship('Categories', secondary=PostCategory, back_populates='posts_category')
+    categories_post = db.relationship('Category', secondary=PostCategory, back_populates='posts_category')
 
 
 class Notification(db.Model):
@@ -60,8 +60,8 @@ class Notification(db.Model):
     users_notification = db.relationship('User', secondary=UserNotification, back_populates='notifications_user')
 
 
-class Categories(db.Model):
-    __tablename__ = 'Categories'
+class Category(db.Model):
+    __tablename__ = 'Category'
     id = db.Column(db.Integer, primary_key=True)
     topic = db.Column(db.Text)
 

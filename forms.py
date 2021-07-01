@@ -14,8 +14,8 @@ class MultiCheckBoxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 class Post(FlaskForm):
-    title = TextField('title', validators=[DataRequired])
-    discussion = TextAreaField('discussion', validators=[DataRequired]) 
+    title = TextField('title', validators=[DataRequired()])
+    discussion = TextAreaField('discussion', validators=[DataRequired()]) 
     categories = [{'id':"1", 'topic':"Maths"}, {'id':"2", 'topic':"Physics"}, {'id':"3", 'topic':"Biology"}, {'id':"4", 'topic':"Chemistry"}, {'id':"5", 'topic':"English"}, {'id':"6", 'topic':"Economics/Business"}, {'id':"7", 'topic':"Programming"}, {'id':"8", 'topic':"other"}]
     files = [(x['id'], x['topic']) for x in categories]
     category = MultiCheckBoxField('Label', choices=files)
