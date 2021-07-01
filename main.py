@@ -71,7 +71,7 @@ def post():
             #db.session.merge(post_info)
             db.session.commit()
             
-        
+         
             
 
         
