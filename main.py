@@ -54,29 +54,17 @@ def post():
             post_info.discussion = form.discussion.data
             post_info.date = date.today().strftime("%d%m%Y")
             post_info.likes = 0
-            post_info.user_id = session['logged_in_user'] 
-            db.session.add(post_info)
-            db.session.commit()
+            post_info.user_id = session['logged_in_user']           
             print(post_info.id)
             post_info = db.session.merge(post_info)
-            li = []
             for catego in form.category.data: 
-                print(catego)
-                category = models.Category.query.filter_by(id = catego).first()
-                #li.append(category)
+                category = db.session.query(models.Category).filter_by(id = catego).first()
                 post_info.categories_post.append(category)
-                db.session.merge(post_info)
-            #post_info.categories_post.extend(li)
-            print(post_info.categories_post)
-            #db.session.merge(post_info)
+
+            db.session.add(post_info)
             db.session.commit()
-            
+            return redirect(url_for('home'))
          
-            
-
-        
-                        
-
     return render_template('post.html', form=form, title='post')
         
 
