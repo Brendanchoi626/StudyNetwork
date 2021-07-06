@@ -26,16 +26,26 @@ db = SQLAlchemy(app)
 
 #imports from models.py and forms.py
 import models
-from forms import Sign_in, Sign_up, Post
+from forms import Sign_in, Sign_up, Post, Likes
 
 #routes#
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
     "The homepage route"
+    form = Likes()
     post = models.Post.query.all()
     user_info = sqlite_conn('data.db', 'SELECT * FROM User WHERE id = (SELECT user_id FROM Post)', True)
-    return render_template('home.html', post=post, user_info=user_info[1], title='home')
+    if request.method == "GET":       
+        return render_template('home.html', post=post, user_info=user_info[1], title='home', form=form)
+    else:
+        if form.is_submitted():
+            post_info = db.session.query(models.Post).filter_by(id =50).first()
+            post_info.likes += 1
+            db.session.commit()
+        return render_template('home.html', post=post, user_info=user_info[1], title='home', form=form)
+
+
 
 
 @app.route('/post', methods=['GET', 'POST'])

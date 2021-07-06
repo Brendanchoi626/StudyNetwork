@@ -5,12 +5,18 @@
 
 {% for posts in post %}
 <ul>
+    
     <li>Title: {{ posts.title }}</li>
     <li>Discussion: {{ posts.discussion}}</li>
     <li>date: {{ posts.date }}</li>
     <li>Likes: {{ posts.likes }}</li>
     <li>Author: {{ user_info }}</li>
+    <li><form method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        {{ form.likes }}
+    </form></li>
 </ul>
 {% endfor %}
+
 
 {% endblock %} 

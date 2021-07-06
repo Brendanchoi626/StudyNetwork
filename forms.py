@@ -20,8 +20,8 @@ class Post(FlaskForm):
     files = [(x['id'], x['topic']) for x in categories]
     category = MultiCheckBoxField('Label', choices=files)
 
-class Sign_up(FlaskForm):
 
+class Sign_up(FlaskForm):
     username = TextField('username', validators=[DataRequired()])
     email = TextField('email', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
@@ -29,8 +29,10 @@ class Sign_up(FlaskForm):
 
 
 class Sign_in(FlaskForm):
-
     username_or_email = TextField('username_or_email', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
+
+class Likes(FlaskForm):
+    likes = SubmitField('💗')
 
     
