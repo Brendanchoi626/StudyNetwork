@@ -32,7 +32,7 @@ class Sign_in(FlaskForm):
     username_or_email = TextField('username_or_email', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
 
-class Likes(FlaskForm):
-    likes = SubmitField('💗')
+class Comment(FlaskForm):
+    comment = TextAreaField('Write your comment or reply here', validators=[DataRequired()])
 
     

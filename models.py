@@ -26,10 +26,12 @@ class User(db.Model):
 
     user_post = db.relationship('Post', back_populates='post_user')
     notifications_user = db.relationship('Notification', secondary=UserNotification, back_populates='users_notification')
+    # Comment
+    users = db.relationship('Comment', back_populates='post')
 
 
 class Reply(db.Model):
-    __tablename__ = 'Reply'
+    __tablename__ = 'Reply'  
     id = db.Column(db.Integer, primary_key=True)
     reply = db.Column(db.Text)
     date = db.Column(db.Integer)
@@ -43,12 +45,14 @@ class Post(db.Model):
     title = db.Column(db.Text)
     discussion = db.Column(db.Text)
     date = db.Column(db.Integer)
-    likes = db.Column(db.Integer)
+    comments = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
 
     post_user = db.relationship('User', back_populates='user_post')
     replies_post = db.relationship('Reply', secondary=PostReply, back_populates='posts_reply')
     categories_post = db.relationship('Category', secondary=PostCategory, back_populates='posts_category')
+    # Comment
+    posts = db.relationship('Comment', back_populates='user')
 
 
 class Notification(db.Model):
@@ -67,3 +71,12 @@ class Category(db.Model):
 
     posts_category = db.relationship('Post', secondary=PostCategory, back_populates='categories_post')
 
+class Comment(db.Model):
+    __tablename__ = 'Comment'
+    id = db.Column(db.Integer, primary_key=True)
+    Post_id = db.Column(db.Integer, db.ForeignKey('Post.id'), nullable = False)
+    User_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable = False)
+    comment = db.Column(db.Text, nullable = False)
+
+    user = db.relationship('Post', back_populates='posts')
+    post = db.relationship('User', back_populates='users')

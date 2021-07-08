@@ -3,6 +3,7 @@ import sqlite3
 from flask import Flask, render_template, request, session, redirect, url_for, Blueprint, g, abort
 import flask_sqlalchemy
 from flask_sqlalchemy.model import Model
+from sqlalchemy.sql.elements import Null
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -26,26 +27,53 @@ db = SQLAlchemy(app)
 
 #imports from models.py and forms.py
 import models
-from forms import Sign_in, Sign_up, Post, Likes
+from forms import Sign_in, Sign_up, Post, Comment
 
 #routes#
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
     "The homepage route"
-    form = Likes()
     post = models.Post.query.all()
     user_info = sqlite_conn('data.db', 'SELECT * FROM User WHERE id = (SELECT user_id FROM Post)', True)
-    if request.method == "GET":       
-        return render_template('home.html', post=post, user_info=user_info[1], title='home', form=form)
+    return render_template('home.html', posts=post, user_info=user_info[1], title='home')
+    '''if request.method == "GET":       
+        return render_template('home.html', posts=post, categories=category, user_info=user_info[1], title='home', form=form)
     else:
         if form.is_submitted():
-            post_info = db.session.query(models.Post).filter_by(id =50).first()
+            post_info = db.session.query(models.Post).filter_by(id = 51).first()
             post_info.likes += 1
             db.session.commit()
-        return render_template('home.html', post=post, user_info=user_info[1], title='home', form=form)
+        return render_template('home.html', post=post, user_info=user_info[1], title='home', form=form)'''
 
+@app.route('/comment/<int:id>', methods=['GET', 'POST'])
+def comment(id):
+    "Route for comment"
+    form = Comment()
+    post_info = db.session.query(models.Post).filter_by(id = id).first()
+    comments = db.session.query(models.Comment).filter_by(Post_id = id).all()
+    if g.logged_in_user == None:
+        return redirect(url_for('user'))
 
+    elif request.method == 'GET': 
+        if comments == Null:
+            return render_template('comment.html', form=form, post_info=post_info)
+        else:
+            return render_template('comment.html', form=form, comments=comments, post_info=post_info)
+
+    else:
+        if form.validate_on_submit():
+            comment_info = models.Comment()
+            comment_info.Post_id = id
+            comment_info.User_id = session['logged_in_user']
+            comment_info.comment = form.comment.data
+            db.session.add(comment_info)
+
+            post_info.comments += 1
+            db.session.commit()
+            return redirect(url_for('comment'))
+
+ 
 
 
 @app.route('/post', methods=['GET', 'POST'])
@@ -63,7 +91,7 @@ def post():
             post_info.title = form.title.data
             post_info.discussion = form.discussion.data
             post_info.date = date.today().strftime("%d%m%Y")
-            post_info.likes = 0
+            post_info.comments = 0
             post_info.user_id = session['logged_in_user']           
             print(post_info.id)
             post_info = db.session.merge(post_info)
