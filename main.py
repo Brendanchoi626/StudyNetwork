@@ -35,16 +35,7 @@ from forms import Sign_in, Sign_up, Post, Comment
 def home():
     "The homepage route"
     post = models.Post.query.all()
-    user_info = sqlite_conn('data.db', 'SELECT * FROM User WHERE id = (SELECT user_id FROM Post)', True)
-    return render_template('home.html', posts=post, user_info=user_info[1], title='home')
-    '''if request.method == "GET":       
-        return render_template('home.html', posts=post, categories=category, user_info=user_info[1], title='home', form=form)
-    else:
-        if form.is_submitted():
-            post_info = db.session.query(models.Post).filter_by(id = 51).first()
-            post_info.likes += 1
-            db.session.commit()
-        return render_template('home.html', post=post, user_info=user_info[1], title='home', form=form)'''
+    return render_template('home.html', posts=post, title='home')
 
 @app.route('/comment/<int:id>', methods=['GET', 'POST'])
 def comment(id):
@@ -71,7 +62,7 @@ def comment(id):
 
             post_info.comments += 1
             db.session.commit()
-            return redirect(url_for('comment'))
+            return redirect(url_for('comment',id=id))
 
  
 
