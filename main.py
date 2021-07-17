@@ -19,40 +19,42 @@ def sqlite_conn(database, query, single=False):
     conn.close() 
     return results 
 
-#from main import db
-
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 
-#imports from models.py and forms.py
+#imports from the project
 import models
 from forms import Sign_in, Sign_up, Post, Comment
 
 #routes#
-
 @app.route('/', methods=['GET', 'POST'])
 def home():
     "The homepage route"
+    # gets all the posts in the database
     post = models.Post.query.all()
     return render_template('home.html', posts=post, title='home')
+
 
 @app.route('/comment/<int:id>', methods=['GET', 'POST'])
 def comment(id):
     "Route for comment"
     form = Comment()
+
     post_info = db.session.query(models.Post).filter_by(id = id).first()
+    user_info = db.session.query(models.User).filter_by(id = session['logged_in_user']).first()
     comments = db.session.query(models.Comment).filter_by(Post_id = id).all()
+    # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
         return redirect(url_for('user'))
 
-    elif request.method == 'GET': 
+    elif request.method == 'GET':# display all the comments in the post
         if comments == Null:
             return render_template('comment.html', form=form, post_info=post_info)
         else:
             return render_template('comment.html', form=form, comments=comments, post_info=post_info)
 
-    else:
+    else: #when someone trys to make a comment, make a comment and notify the owner of the post
         if form.validate_on_submit():
             comment_info = models.Comment()
             comment_info.Post_id = id
@@ -61,7 +63,15 @@ def comment(id):
             db.session.add(comment_info)
 
             post_info.comments += 1
+
+            notification_info = models.Notification()
+            notification_info.user_id = post_info.user_id
+            notification_info.title = "{} has made a reply to your post".format(user_info.username)
+            notification_info.content = form.comment.data
+
+            db.session.add(notification_info)
             db.session.commit()
+        
             return redirect(url_for('comment',id=id))
 
  
@@ -71,11 +81,15 @@ def comment(id):
 def post():
     "Route for post. Allows the player to make new posts."
     form = Post()
+    # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
         return redirect(url_for('user'))
+
+    # when user tries to make a post, lets the user to do so haha..     
     elif request.method == 'GET':
         return render_template('post.html', form=form, title='post')
 
+    # when user triggers the submit button
     else:
         if form.validate_on_submit():
             post_info = models.Post()
@@ -83,7 +97,7 @@ def post():
             post_info.discussion = form.discussion.data
             post_info.date = date.today().strftime("%d%m%Y")
             post_info.comments = 0
-            post_info.user_id = session['logged_in_user']           
+            post_info.user_id = session['logged_in_user']            
             print(post_info.id)
             post_info = db.session.merge(post_info)
             for catego in form.category.data: 
@@ -98,19 +112,25 @@ def post():
         
 
 @app.route('/noti')
-def noti(id):
-    
-    return render_template('noti.html', title='noti')
+def noti():
+    "Notification route. Displays all notifications that belong to the logged in user."
+    # when no one is logged in, tells the user to sign up
+    if g.logged_in_user == None:
+        return redirect(url_for('user'))
+
+    #Show all the notification to the user 
+    else:
+        Noti = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()
+        return render_template('noti.html', noti=Noti, title='noti')
 
  
 @app.route('/profile')
 def profile():
     "Profile route. If the user is signed in, it returns the profile page with user info. Else returns signup page"
+    #Shows the basic information of a logged in user
     if g.logged_in_user:
         user_info = sqlite_conn('data.db', 'SELECT * FROM User WHERE id = {}'.format(session['logged_in_user']), True)
         post_info = models.Post.query.filter_by(user_id = session['logged_in_user']).all()
-        #post_info = models.User.query.filter_by(id=session['logged_in_user']).first()
-        #posts = sqlite_conn('data.db', 'SELECT * FROM Post WHERE id = (SELECT Post_id FROM PostUser WHERE User_id = {})'.format(session['logged_in_user']), True)
         return render_template('profile.html', id=user_info[0], username=user_info[1], email=user_info[2], post=post_info)
 
     return redirect(url_for('user'))
@@ -120,18 +140,21 @@ def profile():
 def user():
     "Sign in route. Checks if the user information is correct and redirects to profile page."    
     form = Sign_in()
+
     usern = models.User.query.filter_by(username = request.form.get('username_or_email')).first()
     usere = models.User.query.filter_by(email = request.form.get('username_or_email')).first()
     password = request.form.get('password')
+
     if request.method == "GET": #If browser asked to see the page
         return render_template('user.html', form=form, title='user')
 
-    else:
+    else:#When the user clicks the sign_in button
         if form.validate_on_submit():
             session.pop('logged_in_user', None)
             #Check if the username/password is matching
             if usern == None and usere == None:
                 return render_template('user.html', form=form, error = 'please check your username/password again')
+
             else:
                 try:
                     passwith = check_password_hash(usern.password, password)                             
@@ -140,10 +163,12 @@ def user():
                 finally:
                     if not passwith:
                         return render_template('user.html', form=form, error = 'please check your username/password again') 
+
             #redirects profile if it matches
             if usere == None:
                 session['logged_in_user'] = usern.id
                 return redirect(url_for('profile'))
+
             else:
                 session['logged_in_user'] = usere.id
                 return redirect(url_for('profile'))
@@ -159,6 +184,7 @@ def signup():
     if request.method == "GET": #If browser asked to see the page
         return render_template('signup.html', form=form, title='sign_up')
     
+    #When the user clicks the sign_up button
     else:
         if form.validate_on_submit():
             if models.User.query.filter_by(username = form.username.data).first() != None:
@@ -177,6 +203,7 @@ def signup():
                 user_info = models.User(
                     username = form.username.data,
                     email = form.email.data,
+                    #Hash the password for extra security
                     password = generate_password_hash(form.password.data, method='sha256')
                 )
                 db.session.add(user_info)

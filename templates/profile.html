@@ -7,7 +7,7 @@
 <p>email adress: {{ email }}</p>
 <p>Posts:</p>
 {% for x in post %}
-    <p>{{x.title}}</p>
+    <a href="/comment/{{x.id}}">{{x.title}}</a>
 {% endfor %}
 
 

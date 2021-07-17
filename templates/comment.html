@@ -3,7 +3,7 @@
 {% block content %}
 <p>{{ post_info.discussion }}</p>
 {% for comment in comments %}
-    <p>> {{ comment.comment }}</p>
+    <p><strong>{{comment.post.username}}</strong> {{ comment.comment }}</p>
 {% endfor %}
 <form method="POST" enctype="multipart/form-data">
     {{ form.csrf_token }}

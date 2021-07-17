@@ -11,11 +11,6 @@ PostReply = db.Table('PostReply', db.Model.metadata,
                     db.Column('Reply_id', db.Integer, db.ForeignKey('Reply.id')))
 
 
-UserNotification = db.Table('UserNotification', db.Model.metadata, 
-                    db.Column('User_id', db.Integer, db.ForeignKey('User.id')), 
-                    db.Column('Notification_id', db.Integer, db.ForeignKey('Notification.id')))
-
-
 
 class User(db.Model):
     __tablename__ = 'User'
@@ -25,7 +20,7 @@ class User(db.Model):
     password = db.Column(db.Text)
 
     user_post = db.relationship('Post', back_populates='post_user')
-    notifications_user = db.relationship('Notification', secondary=UserNotification, back_populates='users_notification')
+    notifications_user = db.relationship('Notification', back_populates='users_notification')
     # Comment
     users = db.relationship('Comment', back_populates='post')
 
@@ -60,8 +55,9 @@ class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
     content = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable = False)
 
-    users_notification = db.relationship('User', secondary=UserNotification, back_populates='notifications_user')
+    users_notification = db.relationship('User', back_populates='notifications_user')
 
 
 class Category(db.Model):
