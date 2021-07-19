@@ -5,7 +5,10 @@
 
 {% for notification in noti %}
     <ul>
-        <li>{{notification.title}}: <strong>{{notification.content}}</strong></li>
+        <li><a href="/comment/{{notification.posts_notification.id}}">{{notification.sender}} has made a reply to your post[{{notification.posts_notification.title}}]: 
+            <strong>{{notification.content}}</strong>
+            ➡</a>
+        </li>
     </ul>
 {% endfor %}
 

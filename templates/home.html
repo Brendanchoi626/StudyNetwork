@@ -9,7 +9,7 @@
     <li>Discussion: {{ post.discussion }}</li>
     <li>date: {{ post.date }}</li>
     <li>comments: {{ post.comments }}</li>
-    <li>Author: {{ post.post_user.username }}</li>
+    <li>Author: <a href="/profile/{{post.post_user.id}}">{{ post.post_user.username }}</a></li>
     <li><a href="/comment/{{post.id}}">💬</a></li>
 </ul>
 {% endfor %}

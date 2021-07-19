@@ -46,6 +46,7 @@ class Post(db.Model):
     post_user = db.relationship('User', back_populates='user_post')
     replies_post = db.relationship('Reply', secondary=PostReply, back_populates='posts_reply')
     categories_post = db.relationship('Category', secondary=PostCategory, back_populates='posts_category')
+    notifications_post = db.relationship('Notification', back_populates='posts_notification')
     # Comment
     posts = db.relationship('Comment', back_populates='user')
 
@@ -53,11 +54,13 @@ class Post(db.Model):
 class Notification(db.Model):
     __tablename__ = 'Notification'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.Text)
+    sender = db.Column(db.Text)
     content = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable = False)
+    post_id = db.Column(db.Integer, db.ForeignKey('Post.id'), nullable = False)
 
     users_notification = db.relationship('User', back_populates='notifications_user')
+    posts_notification = db.relationship('Post', back_populates='notifications_post')
 
 
 class Category(db.Model):

@@ -4,7 +4,7 @@
     <li><a href="/noti">notifications</a></li>
     <li><a href="/post">post</a></li>
     {% if g.logged_in_user %}
-        <li><a href="/profile">profile</a></li>
+        <li><a href="/profile/{{g.logged_in_user}}">profile</a></li>
     {% else %}
         <li><a href="/user">sign in</a></li>
     {% endif %}

@@ -66,8 +66,9 @@ def comment(id):
 
             notification_info = models.Notification()
             notification_info.user_id = post_info.user_id
-            notification_info.title = "{} has made a reply to your post".format(user_info.username)
+            notification_info.sender = user_info.username
             notification_info.content = form.comment.data
+            notification_info.post_id = id
 
             db.session.add(notification_info)
             db.session.commit()
@@ -124,16 +125,14 @@ def noti():
         return render_template('noti.html', noti=Noti, title='noti')
 
  
-@app.route('/profile')
-def profile():
+@app.route('/profile/<int:id>')
+def profile(id):
     "Profile route. If the user is signed in, it returns the profile page with user info. Else returns signup page"
-    #Shows the basic information of a logged in user
-    if g.logged_in_user:
-        user_info = sqlite_conn('data.db', 'SELECT * FROM User WHERE id = {}'.format(session['logged_in_user']), True)
-        post_info = models.Post.query.filter_by(user_id = session['logged_in_user']).all()
-        return render_template('profile.html', id=user_info[0], username=user_info[1], email=user_info[2], post=post_info)
-
-    return redirect(url_for('user'))
+    #Shows the basic information of a user with a certain id. 
+    user_info = models.User.query.filter_by(id = id).first()
+    post_info = models.Post.query.filter_by(user_id = id).all()
+    logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first()
+    return render_template('profile.html', user=user_info, post=post_info, loginuser=logged_in_user_info)
 
 
 @app.route('/user', methods=['GET', 'POST'])
@@ -167,11 +166,11 @@ def user():
             #redirects profile if it matches
             if usere == None:
                 session['logged_in_user'] = usern.id
-                return redirect(url_for('profile'))
+                return redirect(url_for('profile', id=session['logged_in_user']))
 
             else:
                 session['logged_in_user'] = usere.id
-                return redirect(url_for('profile'))
+                return redirect(url_for('profile', id=session['logged_in_user']))
 
         else:
             return render_template('user.html', form=form, title='user')

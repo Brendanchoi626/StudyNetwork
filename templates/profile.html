@@ -2,12 +2,13 @@
 
 {% block content %}
 <h1>user profile</h1>
-<p>user_id: {{ id }}</p>
-<p>username: {{ username }}</p>
-<p>email adress: {{ email }}</p>
+<p>logged in as {{loginuser.username}}</p>
+<p>user_id: {{ user.id }}</p>
+<p>username: {{ user.username }}</p>
+<p>email adress: {{ user.email }}</p>
 <p>Posts:</p>
 {% for x in post %}
-    <a href="/comment/{{x.id}}">{{x.title}}</a>
+    <a href="/comment/{{x.id}}">{{x.title}}</a><br><br>
 {% endfor %}
 
 
