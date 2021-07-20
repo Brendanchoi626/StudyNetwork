@@ -131,8 +131,11 @@ def profile(id):
     #Shows the basic information of a user with a certain id. 
     user_info = models.User.query.filter_by(id = id).first()
     post_info = models.Post.query.filter_by(user_id = id).all()
-    logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first()
-    return render_template('profile.html', user=user_info, post=post_info, loginuser=logged_in_user_info)
+    if g.logged_in_user:
+        logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first()
+        return render_template('profile.html', user=user_info, post=post_info, loginuser=logged_in_user_info)
+    else:
+        return render_template('profile.html', user=user_info, post=post_info)
 
 
 @app.route('/user', methods=['GET', 'POST'])

@@ -2,7 +2,13 @@
 
 {% block content %}
 <h1>user profile</h1>
-<p>logged in as {{loginuser.username}}</p>
+
+{% if g.logged_in_user %}
+    <p>logged in as <strong>{{loginuser.username}}</strong></p>
+{% else %}
+    <a href="/user">click here to sign in</a>
+{% endif %}
+
 <p>user_id: {{ user.id }}</p>
 <p>username: {{ user.username }}</p>
 <p>email adress: {{ user.email }}</p>
@@ -10,12 +16,5 @@
 {% for x in post %}
     <a href="/comment/{{x.id}}">{{x.title}}</a><br><br>
 {% endfor %}
-
-
-
 <button onclick="window.location = 'http://127.0.0.1:5000/logout'" type="submit">Logout</button>
-
-
-
-
 {% endblock %}

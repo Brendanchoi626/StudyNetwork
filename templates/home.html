@@ -10,7 +10,11 @@
     <li>date: {{ post.date }}</li>
     <li>comments: {{ post.comments }}</li>
     <li>Author: <a href="/profile/{{post.post_user.id}}">{{ post.post_user.username }}</a></li>
-    <li><a href="/comment/{{post.id}}">💬</a></li>
+    {% if g.logged_in_user %}
+        <li><a href="/comment/{{post.id}}">💬</a></li>
+    {% else %}
+        <li><a href="/user">💬</a></li>
+    {% endif %}
 </ul>
 {% endfor %}
 
