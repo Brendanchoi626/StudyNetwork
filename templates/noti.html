@@ -5,10 +5,13 @@
 
 {% for notification in noti %}
     <ul>
+        <!-- <form method="POST" enctype="multipart/form-data"> -->
         <li><a href="/comment/{{notification.posts_notification.id}}">{{notification.sender}} has made a reply to your post[{{notification.posts_notification.title}}]: 
             <strong>{{notification.content}}</strong>
             ➡</a>
         </li>
+        <!-- <input type="submit" value="X"> -->
+        <!-- </form> -->
     </ul>
 {% endfor %}
 

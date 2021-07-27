@@ -3,10 +3,11 @@ from flask_wtf import Form
 from flask_wtf.form import FlaskForm
 from flask_wtf.recaptcha import validators
 from wtforms import widgets, SelectMultipleField, SubmitField, PasswordField
-from wtforms.fields.simple import TextField, TextAreaField
+from wtforms.fields.simple import HiddenField, TextField, TextAreaField
 from wtforms.validators import DataRequired, Optional, ValidationError
 from wtforms.widgets.core import TextArea
 import models
+from flask import session
 
 
 class MultiCheckBoxField(SelectMultipleField):
@@ -35,4 +36,5 @@ class Sign_in(FlaskForm):
 class Comment(FlaskForm):
     comment = TextAreaField('Write your comment or reply here', validators=[DataRequired()])
 
-    
+# class Notification(FlaskForm):
+    # tobe_deleted = HiddenField(None, None, None, None, None)

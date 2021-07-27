@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, B
 import flask_sqlalchemy
 from flask_sqlalchemy.model import Model
 from sqlalchemy.sql.elements import Null
+from wtforms import form
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -112,15 +113,14 @@ def post():
     return render_template('post.html', form=form, title='post')
         
 
-@app.route('/noti')
+@app.route('/noti', methods=['GET', 'POST'])
 def noti():
     "Notification route. Displays all notifications that belong to the logged in user."
     # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
         return redirect(url_for('user'))
-
-    #Show all the notification to the user 
-    else:
+    else: 
+        #Show all the notification to the user 
         Noti = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()
         return render_template('noti.html', noti=Noti, title='noti')
 
