@@ -76,8 +76,6 @@ def comment(id):
         
             return redirect(url_for('comment',id=id))
 
- 
-
 
 @app.route('/post', methods=['GET', 'POST'])
 def post():
@@ -124,7 +122,17 @@ def noti():
         Noti = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()
         return render_template('noti.html', noti=Noti, title='noti')
 
- 
+
+@app.route('/mark_read/<int:id>/<int:pid>')
+def mark_read(id, pid):
+    "A route that deletes the notifications which are read"
+    noti_to_delete = models.Notification.query.filter_by(id = id).first()
+    noti_to_delete = db.session.merge(noti_to_delete)
+    db.session.delete(noti_to_delete)
+    db.session.commit()
+    return redirect(url_for('comment', id=pid))
+
+
 @app.route('/profile/<int:id>')
 def profile(id):
     "Profile route. If the user is signed in, it returns the profile page with user info. Else returns signup page"
@@ -215,7 +223,6 @@ def signup():
         
         else:
             return render_template('signup.html', form=form, title='sign_up')
-
 
 
 @app.route('/logout')

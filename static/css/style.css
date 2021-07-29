@@ -33,3 +33,12 @@ nav li a.logged_in{
     background-color: cornsilk;
 
 }
+/* Footer */
+footer{
+  list-style-type: none;
+    margin: 0;
+    padding: 10px;
+    overflow: hidden;
+    background-color: black;
+    color: white;
+}

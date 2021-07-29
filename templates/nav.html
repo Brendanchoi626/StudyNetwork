@@ -1,12 +1,12 @@
 <nav>
 <ul>
-    <li><a href="/">home</a></li>
+    <li><a href="/"><img src="/static/logo/Study_network - Copy.jpg" width="100px" height="70px"></a></li>
     <li><a href="/post">post</a></li>
-    <li><a href="/noti">notifications</a></li>
     {% if g.logged_in_user %}
         <li style = "float:right"><a class="logged_in" href="/profile/{{g.logged_in_user}}">profile</a></li>
     {% else %}
-        <li style = "float:right"></listyle>><a class="logged_in" href="/user">sign in</a></li>
+        <li style = "float:right"></listyle><a class="logged_in" href="/user">sign in</a></li>
     {% endif %}
+    <li style = "float:right"><a href="/noti">notifications</a></li>
 </ul>
 </nav>
