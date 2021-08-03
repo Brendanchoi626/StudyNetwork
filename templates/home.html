@@ -1,22 +1,28 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h1>Study Network home</h1>
 
+<main>
+
+<h1>All Questions</h1>
 {% for post in posts %}
+
 <ul>
-    <li>Title: {{ post.title }}</li>
-    <li>Discussion: {{ post.discussion }}</li>
-    <li>date: {{ post.date }}</li>
-    <li>comments: {{ post.comments }}</li>
-    <li>Author: <a href="/profile/{{post.post_user.id}}">{{ post.post_user.username }}</a></li>
+    <li class="title">Title: {{ post.title }}</li>
+    <li class="discussion">Discussion: {{ post.discussion }}</li>
+    <li class="other_information">date: {{ post.date }}  Author: <a href="/profile/{{post.post_user.id}}">{{ post.post_user.username }}</a>  comments: {{ post.comments }}
     {% if g.logged_in_user %}
-        <li><a href="/comment/{{post.id}}">💬</a></li>
+        <a href="/comment/{{post.id}}">💬</a>
     {% else %}
-        <li><a href="/user">💬</a></li>
+        <a href="/user">💬</a>
     {% endif %}
+    </li>
+    <li class="tags">Tags: {% for catego in post.categories_post %}
+        {{catego.topic}}
+        {% endfor %}
+    </li>
 </ul>
+
 {% endfor %}
-
-
+</main>
 {% endblock %} 

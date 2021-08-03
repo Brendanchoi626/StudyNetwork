@@ -2,6 +2,9 @@
 html{
 
 }
+body{
+
+}
 
 /* Navigation bar */
 nav ul {
@@ -21,17 +24,17 @@ nav li a {
     display: block;
     color: black;
     text-align: center;
-    padding: 14px 16px;
+    padding: 10px 12px;
     text-decoration: none;
 }
   
-nav li a:hover:not(.logged_in) {
+nav li a:hover {
     background-color:whitesmoke;
   }
-  
-nav li a.logged_in{
-    background-color: cornsilk;
 
+nav li a img{
+  width: 100%;
+  height: 50px;
 }
 /* Footer */
 footer{
@@ -41,4 +44,11 @@ footer{
     overflow: hidden;
     background-color: black;
     color: white;
+}
+
+/* HOME */
+body main{
+  display: block;
+  max-width: 90%;
+  margin-left: 5%;
 }
