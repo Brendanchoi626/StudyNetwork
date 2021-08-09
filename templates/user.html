@@ -1,14 +1,18 @@
 {% extends 'layout.html' %}
-
-{% block content %}<h1>Login</h1>
-<form method="POST" enctype="multipart/form-data">
+{% block content %}
+<div class="signup_form">
+<form method="POST" enctype="multipart/form-data" class="signup_form_content">
+    <h1>Login</h1>
+    <img src="/static/logo/Study_network - Copy.jpg" height="120px" width="180px">
     <!-- Form content -->   
     {{ form.csrf_token }}
-    <p>Username or email: {{ form.username_or_email }} <span style="color:red">{{ form.username_or_email.errors }}</span></p>
-    <p>password: {{ form.password}} <span style="color:red">{{ form.password.errors }}</span></p>
+    <p>Username or email</p> 
+    <p>{{ form.username_or_email }}</p>
+    <p>password</p> 
+    <p>{{ form.password}}</p>
     <input type="submit" value="Login">
+    <p style="color: red;">{{ error }}</p>
+    <p>Don't have an account? <a href="/signup">sign up</a> right now!</p>
 </form>
-<p>{{error}}</p>
-<p>Don't have an account? <a href="/signup">sign up</a> right now!</p>
-
+</div>
 {% endblock %}

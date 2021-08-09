@@ -7,21 +7,24 @@
 <h1>All Questions</h1>
 {% for post in posts %}
 
-<ul>
-    <li class="title">Title: {{ post.title }}</li>
-    <li class="discussion">Discussion: {{ post.discussion }}</li>
-    <li class="other_information">date: {{ post.date }}  Author: <a href="/profile/{{post.post_user.id}}">{{ post.post_user.username }}</a>  comments: {{ post.comments }}
-    {% if g.logged_in_user %}
-        <a href="/comment/{{post.id}}">💬</a>
-    {% else %}
-        <a href="/user">💬</a>
-    {% endif %}
-    </li>
-    <li class="tags">Tags: {% for catego in post.categories_post %}
-        {{catego.topic}}
-        {% endfor %}
-    </li>
-</ul>
+<div class="grid_container">
+<h3 class="title">{{ post.title }}</h3>
+<p class="discussion">Discussion: {{ post.discussion }}</p> 
+<div class="other_information">
+<p>Posted by: <a href="/profile/{{post.post_user.id}}">{{ post.post_user.username }}</a></p>
+<p>date: {{ post.date }} 
+<p>comments: {{ post.comments }}</p>
+<p class="tags">Tags: {% for catego in post.categories_post %}
+    {{catego.topic}}
+    {% endfor %}
+</p>
+</div class="comment_button">
+{% if g.logged_in_user %}
+    <a href="/comment/{{post.id}}">💬</a>
+{% else %}
+    <a href="/user">💬</a>
+{% endif %}
+</div>
 
 {% endfor %}
 </main>

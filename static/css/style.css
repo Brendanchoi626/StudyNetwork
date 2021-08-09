@@ -5,6 +5,9 @@ html{
 body{
 
 }
+a{
+  text-decoration: none;
+}
 
 /* Navigation bar */
 nav ul {
@@ -51,4 +54,44 @@ body main{
   display: block;
   max-width: 90%;
   margin-left: 5%;
+}
+.grid_container{
+  display: grid;
+  grid-template-columns: 50% 50%;
+  border: 1px solid black;
+  padding: 1%;
+  margin-bottom: 2%;
+}
+.title{
+  grid-column: 1;
+  grid-row: 1;
+}
+.discussion{
+  grid-row:2;
+  grid-column: 1;
+}
+.other_information{
+  grid-column: 2;
+  grid-row: 1/ span 2;
+}
+.comment_button{
+  grid-column: 1;
+  grid-row:3;
+}
+/* Sign_up */
+.signup_form{ /* Stay in place */
+  left: 0;
+  top: 0;
+  height: 100%;
+  overflow: auto; /* Enable scroll if needed */
+  padding-top: 10px;
+  background-color: #F0F0EC;
+}
+.signup_form_content{
+  background-color:white;
+  margin: 4% auto 12% auto;
+  border: 1px solid #888;
+  width: 25%;
+  text-align: center;
+  padding-bottom: 3%;
 }
