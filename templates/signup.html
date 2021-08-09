@@ -6,16 +6,17 @@
     <!-- Form content -->
     <h1>sign up</h1>
     {{ form.csrf_token }}
-    <p>Username</p> 
-    <p>{{ form.username }}</p>
-    <p>email</p>
-    <p>{{ form.email }}</p>
-    <p>password</p>
-    <p>{{ form.password}}</p>
-    <p>re-enter your password</p>
-    <p>{{ form.re_password }}</p>
+    <p class="form_text">Username</p> 
+    <p class="input">{{ form.username }}</p>
+    <p class="form_text">email</p>
+    <p class="input">{{ form.email }}</p>
+    <p class="form_text">password</p>
+    <p class="input">{{form.password}}</p>
+    <p class="form_text">re-enter your password</p>
+    <p class="input">{{ form.re_password }}</p>
     <input type="submit" value="Sign Up">
     <p style="color: red;">{{ error }}</p>
+    <p>Already have an account? <a href="/user">sign in</a> right now!</p>
 </form>
 </div>
 

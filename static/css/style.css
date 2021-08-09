@@ -79,19 +79,50 @@ body main{
   grid-row:3;
 }
 /* Sign_up */
-.signup_form{ /* Stay in place */
+form .input{
+  width: 100%;
+  padding: 15px 0 15px 0;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* Set a style for all buttons */
+input[type=submit]{
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+input[type=submit]:hover {
+  opacity:1;
+}
+
+/* Add padding to container elements */
+form {
+  padding: 16px;
+}
+
+/* The Modal (background) */
+.signup_form{
   left: 0;
   top: 0;
   height: 100%;
-  overflow: auto; /* Enable scroll if needed */
+  overflow: auto;
   padding-top: 10px;
-  background-color: #F0F0EC;
+  background-color: rgba(240, 240, 236, 0.5);
 }
 .signup_form_content{
   background-color:white;
   margin: 4% auto 12% auto;
   border: 1px solid #888;
-  width: 25%;
+  width: 20%;
   text-align: center;
   padding-bottom: 3%;
 }
