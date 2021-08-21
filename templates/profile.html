@@ -1,20 +1,20 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h1>user profile</h1>
-
-{% if g.logged_in_user %}
-    <p>logged in as <strong>{{loginuser.username}}</strong></p>
-{% else %}
-    <a href="/user">click here to sign in</a>
-{% endif %}
-
-<p>user_id: {{ user.id }}</p>
-<p>username: {{ user.username }}</p>
-<p>email adress: {{ user.email }}</p>
-<p>Posts:</p>
-{% for x in post %}
-    <a href="/comment/{{x.id}}">{{x.title}}</a><br><br>
-{% endfor %}
+<main>
+<img src="/static/logo/sampleProfile.jpg" width="200px" height="200px">
+<!-- Logout button -->
+<p class="username"><strong>{{ user.username }}</strong></p>
+<p>Email address: {{ user.email }}</p>
 <button onclick="window.location = 'http://127.0.0.1:5000/logout'" type="submit">Logout</button>
+
+<div class="profile">
+{% for each_post in post %}
+    <p><a class="title" href="/comment/{{each_post.id}}"><strong>{{each_post.title}}</strong></a><br>
+    <a class="discussion" href="/comment/{{each_post.id}}">{{each_post.discussion}}</a></p>
+{% endfor %}
+
+</div>
+
+</main>
 {% endblock %}

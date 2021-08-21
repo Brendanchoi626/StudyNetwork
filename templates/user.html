@@ -7,9 +7,9 @@
     <!-- Form content -->   
     {{ form.csrf_token }}
     <p class="form_text">Username or email</p> 
-    <p class="input">{{form.username_or_email}}</p>
+    <p>{{form.username_or_email}}</p>
     <p class="form_text">password</p> 
-    <p class="input">{{form.password}}</p>
+    <p>{{form.password}}</p>
     <input type="submit" value="Login">
     <p style="color: red;">{{ error }}</p>
     <p>Don't have an account? <a href="/signup">sign up</a> right now!</p>
