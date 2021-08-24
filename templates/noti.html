@@ -1,12 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h1>notification</h1>
+<div class="notification">
+<h1>Unread notifications</h1>
 {% if noti %}
     {% for notification in noti %}
         <ul>
             <!-- <form method="POST" enctype="multipart/form-data"> -->
-            <li><a href="/mark_read/{{notification.id}}/{{notification.posts_notification.id}}">{{notification.sender}} has made a reply to your post[{{notification.posts_notification.title}}]: 
+            <li><a href="/mark_read/{{notification.id}}/{{notification.posts_notification.id}}"><strong>{{notification.sender}}</strong>
+                 has made a reply to your post[{{notification.posts_notification.title}}]: 
                 <strong>{{notification.content}}</strong>
                 ➡</a>
             </li>
@@ -17,5 +19,6 @@
 {% else %}
     <p>You have no notifications to display</p>
 {% endif %}
+</div>
 
 {% endblock %}

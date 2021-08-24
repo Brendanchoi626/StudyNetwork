@@ -6,7 +6,11 @@
 <!-- Logout button -->
 <p class="username"><strong>{{ user.username }}</strong></p>
 <p>Email address: {{ user.email }}</p>
-<button onclick="window.location = 'http://127.0.0.1:5000/logout'" type="submit">Logout</button>
+{% if g.logged_in_user == user.id%}
+    <div class="logout">
+    <button onclick="window.location = 'http://127.0.0.1:5000/logout'" type="submit">Logout</button>
+    </div>
+{% endif %}
 
 <div class="profile">
 {% for each_post in post %}

@@ -5,10 +5,15 @@ html{
 
 }
 body{
-
+  
 }
 a{
   text-decoration: none;
+  color: #111;
+}
+a.name:link:hover{
+  text-decoration: underline;
+  opacity: 0.9;
 }
 body main{
   display: block;
@@ -112,7 +117,7 @@ form {
   padding-bottom: 3%;
 }
 /* the inputfields eg. username/password */
-input:not(input[type=submit]){
+.signup_form input:not(input[type=submit]){
   width: 95%;
   padding: 14px 2.5%;
   margin: 8px 0;
@@ -120,11 +125,11 @@ input:not(input[type=submit]){
   border: none;
   background: #f1f1f1;
 }
-input:not(input[type=submit]):focus{
+.signup_form input:not(input[type=submit]):focus{
   background: #c9c9c9;
 }
 /* the login buttons */
-input[type=submit]{
+.signup_form input[type=submit]{
   background-color: #04AA6D;
   color: white;
   padding: 14px 20px;
@@ -134,9 +139,10 @@ input[type=submit]{
   width: 100%;
   opacity: 0.9;
 }
-input[type=submit]:hover {
+.signup_form input[type=submit]:hover {
   opacity:1;
 }
+
 /* ------- */
 /* Profile */
 /* ------- */
@@ -180,8 +186,63 @@ input[type=submit]:hover {
 .username{
   font-size: larger;
 }
+.logout button{
+  color: white;
+  background-color: rgb(255, 34, 34);
+  width:10%;
+  height: auto;
+  border: none;
+  cursor: pointer;
+  padding: 14px 20px;
+  margin: 8px 0;
+  opacity: 0.9;
+}
+.logout button:hover{
+  opacity: 1;
+}
 /* ------- */
 /*  Post   */
 /* ------- */
-.pos
+.post_form .checkbox ul{
+  white-space:nowrap;
+  list-style: none;
+  padding: 0px;
+}
+.post_form .checkbox li{}
 
+.post_form .checkbox{
+  width:100px;
+}
+.post_form input:not(input[type=submit]){
+  width: 100%;
+  padding: 5px 5px;
+  min-height: 10%;
+}
+.post_form textarea{
+  width: 100%;
+  padding: 5px 5px;
+  min-height: 150px;
+  height: auto;
+}
+.post_form input:not(input[type=submit]):focus{
+  background-color: #e4e4e4;
+}
+.post_form textarea:focus{
+  background-color: #e4e4e4;
+}
+/* ------- */
+/*   noti  */
+/* ------- */
+.notification ul{
+  list-style: none;
+  display: block;
+  height: auto;
+  min-height: 30px;
+  padding: 0;
+  width: 96%;
+  margin-left: 2%;
+}
+.notification h1{
+  width: 96%;
+  margin-left: 2%;
+}
