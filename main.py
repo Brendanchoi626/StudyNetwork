@@ -2,6 +2,7 @@
 import sqlite3
 from flask import Flask, render_template, request, session, redirect, url_for, Blueprint, g, abort
 import flask_sqlalchemy
+from flask_sqlalchemy import model
 from flask_sqlalchemy.model import Model
 from sqlalchemy.sql.elements import Null
 from wtforms import form
@@ -34,7 +35,10 @@ def home():
     "The homepage route"
     # gets all the posts in the database
     post = models.Post.query.all()
-    return render_template('home.html', posts=post, title='home')
+    number_of_items = 0
+    for p in post:
+        number_of_items += 1
+    return render_template('home.html', posts=post, title='home', n=int(number_of_items))
 
 
 @app.route('/comment/<int:id>', methods=['GET', 'POST'])
