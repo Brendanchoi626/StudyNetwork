@@ -92,6 +92,10 @@ footer{
   grid-column: 1;
   grid-row:3;
 }
+main input{
+  margin-bottom: 2%;
+
+}
 /* ------- */
 /* Sign_up */
 /* ------- */
@@ -171,6 +175,7 @@ form {
   margin:0;
   padding: 1%;
   color: black;
+  border: 1px solid black;
 }
 .profile p .title:hover{
   color: #888;
@@ -182,6 +187,7 @@ form {
   height: auto;
   color: black;
   min-height: 120px;
+  border: 1px black solid;
 }
 .username{
   font-size: larger;

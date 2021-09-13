@@ -26,27 +26,29 @@ placeholder="Search for questions">
         <a href="/user">💬</a>
     {% endif %}
 </div>
-</div>
 {% endfor %}
+</div>
+
 <script>
-    function SearchFilter() {
-        // listing all the variables
-        var input, filter, questionList, question, title, i, txtValue;
-        input = document.getElementById("search")
-        filter = input.value.toUpperCase();
-        questionList = document.getElementById("questionList")
-        question = questionList.getElementsByClassName("grid_container")
-        for (i=0; i < question.length; i++) {
-            title = question[i].getElementsByTagName("h3")[0];
-            txtValue = title.textContent || title.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                question[i].style.display = "";
-            } else {
-                question[i].style.display = "none";
-            }
+function SearchFilter() {
+    // listing all the variables
+    var input, filter, questionList, question, title, i, txtValue;
+    input = document.getElementById("search")
+    filter = input.value.toUpperCase();
+    questionList = document.getElementById("questionList")
+    question = questionList.getElementsByClassName("grid_container")
+
+    for (i=0; i < question.length; i++) {
+        title = question[i].getElementsByTagName("h3")[0];
+
+        txtValue = title.textContent || title.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            question[i].style.display = "";
+        } else {
+            question[i].style.display = "none";
         }
     }
-    
+}
 </script>
 </main>
 
