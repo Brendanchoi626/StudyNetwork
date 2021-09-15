@@ -70,6 +70,7 @@ class Category(db.Model):
 
     posts_category = db.relationship('Post', secondary=PostCategory, back_populates='categories_post')
 
+
 class Comment(db.Model):
     __tablename__ = 'Comment'
     id = db.Column(db.Integer, primary_key=True)

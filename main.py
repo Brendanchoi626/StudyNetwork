@@ -11,6 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
 
+
 #SQL query executer
 def sqlite_conn(database, query, single=False):
     "connects to a database and returns data"
@@ -21,13 +22,16 @@ def sqlite_conn(database, query, single=False):
     conn.close() 
     return results 
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 
+
 #imports from the project
 import models
 from forms import Sign_in, Sign_up, Post, Comment
+
 
 #routes#
 @app.route('/', methods=['GET', 'POST'])
@@ -46,7 +50,7 @@ def comment(id):
     "Route for comment"
     form = Comment()
 
-    post_info = db.session.query(models.Post).filter_by(id = id).first()
+    post_info = db.session.query(models.Post).filter_by(id = id).first_or_404()
     user_info = db.session.query(models.User).filter_by(id = session['logged_in_user']).first()
     comments = db.session.query(models.Comment).filter_by(Post_id = id).all()
     # when no one is logged in, tells the user to sign up
@@ -115,8 +119,8 @@ def post():
     return render_template('post.html', form=form, title='post')
         
 
-@app.route('/noti', methods=['GET', 'POST'])
-def noti():
+@app.route('/notification', methods=['GET', 'POST'])
+def notification():
     "Notification route. Displays all notifications that belong to the logged in user."
     # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
@@ -141,7 +145,7 @@ def mark_read(id, pid):
 def profile(id):
     "Profile route. If the user is signed in, it returns the profile page with user info. Else returns signup page"
     #Shows the basic information of a user with a certain id. 
-    user_info = models.User.query.filter_by(id = id).first()
+    user_info = models.User.query.filter_by(id = id).first_or_404()
     post_info = models.Post.query.filter_by(user_id = id).all()
     if g.logged_in_user:
         logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first()
