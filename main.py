@@ -150,6 +150,8 @@ def profile(id):
     if g.logged_in_user:
         logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first()
         return render_template('profile.html', user=user_info, post=post_info, loginuser=logged_in_user_info)
+    elif g.logged_in_user == None:
+        abort(404)
     else:
         return render_template('profile.html', user=user_info, post=post_info)
 
@@ -249,5 +251,8 @@ def before_request():
         g.logged_in_user = session['logged_in_user']
 
 
+@app.errorhandler(404)
+def return_error(e):
+    return render_template('404.html'), 404
 if __name__ == "__main__":
     app.run(debug=True)
