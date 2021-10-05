@@ -134,7 +134,7 @@ def notification():
 @app.route('/mark_read/<int:id>/<int:pid>')
 def mark_read(id, pid):
     "A route that deletes the notifications which are read"
-    noti_to_delete = models.Notification.query.filter_by(id = id).first()
+    noti_to_delete = models.Notification.query.filter_by(id = id).first_or_404()
     noti_to_delete = db.session.merge(noti_to_delete)
     db.session.delete(noti_to_delete)
     db.session.commit()
@@ -148,7 +148,7 @@ def profile(id):
     user_info = models.User.query.filter_by(id = id).first_or_404()
     post_info = models.Post.query.filter_by(user_id = id).all()
     if g.logged_in_user:
-        logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first()
+        logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first_or_404()
         return render_template('profile.html', user=user_info, post=post_info, loginuser=logged_in_user_info)
     elif g.logged_in_user == None:
         abort(404)
