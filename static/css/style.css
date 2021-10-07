@@ -30,11 +30,13 @@ body main{
 /* -------------- */
 nav ul {
     list-style-type: none;
-    margin: 0;
+    margin: 0; 
     padding: 0;
     overflow: hidden;
     background-color: white;
-    border: 2px solid #111;
+    border-bottom: 2px solid #888;
+    border-top: 3px solid #111;
+    width: 100%;
   }
   
 nav li:not(.logged_in) {
@@ -166,7 +168,7 @@ form {
 /* ------- */
 .profile{
   display: grid;
-  grid-template-columns: 33.33% 33.33% 33.34%;
+  grid-template-columns: 100%;
   overflow:auto;
   grid-row: black;
   border: 1px solid black;
@@ -215,7 +217,7 @@ form {
 .logout button{
   color: white;
   background-color: rgb(255, 34, 34);
-  width:10%;
+  width: 100px;
   height: auto;
   border: none;
   cursor: pointer;
@@ -295,3 +297,27 @@ form {
   height: auto;
 }
 
+/*-------------------*/
+/* responsive design */
+/*-------------------*/
+@media screen and (min-width: 600px){
+  .profile{
+    grid-template-columns: 50% 50%
+  }
+}
+@media screen and (min-width: 1280px) {
+  body main{
+    width: 60%;
+    margin-left: 20%;
+  }
+  nav ul .size_adjust_div {
+    width: 60%;
+    margin-left: 20%;
+  }
+  .profile{
+    grid-template-columns: 33.33% 33.33% 33.34%;
+  }
+  .logout button{
+    width: 10%;
+  }
+}

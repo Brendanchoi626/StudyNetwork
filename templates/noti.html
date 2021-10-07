@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
 
+
 {% block content %}
+<main>
 <div class="notification">
 <h1>Unread notifications</h1>
 {% if noti %}
@@ -20,5 +22,5 @@
     <p>You have no notifications to display</p>
 {% endif %}
 </div>
-
+</main>
 {% endblock %}

@@ -23,7 +23,7 @@ placeholder="Search for questions">
     {% if g.logged_in_user %}
         <a href="/comment/{{post.id}}">💬</a>
     {% else %}
-        <a href="/user">💬</a>
+        <a href="/signin">💬</a>
     {% endif %}
 </div>
 {% endfor %}

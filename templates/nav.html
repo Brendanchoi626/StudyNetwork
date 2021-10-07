@@ -1,12 +1,14 @@
 <nav>
 <ul>
+    <div class="size_adjust_div">
     <li><a href="/"><img src="/static/logo/Study_network - Copy.jpg"></a></li>
     <li><a href="/post"><img src="/static/logo/KakaoTalk_20210729_123828148_01.jpg"></a></li>
     {% if g.logged_in_user %}
         <li style = "float:right"><a class="logged_in" href="/profile/{{g.logged_in_user}}"><img src="/static//logo/KakaoTalk_20210802_114208981.jpg"></a></li>
     {% else %}
-        <li style = "float:right"></listyle><a class="logged_in" href="/user"><img src="/static/logo/KakaoTalk_20210802_113545184.jpg"></a></li>
+        <li style = "float:right"></listyle><a class="logged_in" href="/signin"><img src="/static/logo/KakaoTalk_20210802_113545184.jpg"></a></li>
     {% endif %}
     <li style = "float:right"><a href="/notification"><img src="/static/logo/KakaoTalk_20210729_123828148_02.jpg"></a></li>
+    </div>
 </ul>
 </nav>

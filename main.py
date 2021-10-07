@@ -55,7 +55,7 @@ def comment(id):
     comments = db.session.query(models.Comment).filter_by(Post_id = id).all()
     # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
-        return redirect(url_for('user'))
+        return redirect(url_for('signin'))
 
     elif request.method == 'GET':# display all the comments in the post
         if comments == Null:
@@ -72,14 +72,14 @@ def comment(id):
             db.session.add(comment_info)
 
             post_info.comments += 1
+            if user_info.id != post_info.user_id:
+                notification_info = models.Notification()
+                notification_info.user_id = post_info.user_id
+                notification_info.sender = user_info.username
+                notification_info.content = form.comment.data
+                notification_info.post_id = id
 
-            notification_info = models.Notification()
-            notification_info.user_id = post_info.user_id
-            notification_info.sender = user_info.username
-            notification_info.content = form.comment.data
-            notification_info.post_id = id
-
-            db.session.add(notification_info)
+                db.session.add(notification_info)
             db.session.commit()
         
             return redirect(url_for('comment',id=id))
@@ -91,7 +91,7 @@ def post():
     form = Post()
     # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
-        return redirect(url_for('user'))
+        return redirect(url_for('signin'))
 
     # when user tries to make a post, lets the user to do so haha..     
     elif request.method == 'GET':
@@ -124,7 +124,7 @@ def notification():
     "Notification route. Displays all notifications that belong to the logged in user."
     # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
-        return redirect(url_for('user'))
+        return redirect(url_for('signin'))
     else: 
         #Show all the notification to the user 
         Noti = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()
@@ -156,8 +156,8 @@ def profile(id):
         return render_template('profile.html', user=user_info, post=post_info)
 
 
-@app.route('/user', methods=['GET', 'POST'])
-def user():
+@app.route('/signin', methods=['GET', 'POST'])
+def signin():
     "Sign in route. Checks if the user information is correct and redirects to profile page."    
     form = Sign_in()
 
@@ -166,14 +166,14 @@ def user():
     password = request.form.get('password')
 
     if request.method == "GET": #If browser asked to see the page
-        return render_template('user.html', form=form, title='user')
+        return render_template('signin.html', form=form, title='user')
 
     else:#When the user clicks the sign_in button
         if form.validate_on_submit():
             session.pop('logged_in_user', None)
             #Check if the username/password is matching
             if usern == None and usere == None:
-                return render_template('user.html', form=form, error = 'please check your username/password again')
+                return render_template('signin.html', form=form, error = 'please check your username/password again')
 
             else:
                 try:
@@ -182,7 +182,7 @@ def user():
                     passwith = check_password_hash(usere.password, password)
                 finally:
                     if not passwith:
-                        return render_template('user.html', form=form, error = 'please check your username/password again') 
+                        return render_template('signin.html', form=form, error = 'please check your username/password again') 
 
             #redirects profile if it matches
             if usere == None:
@@ -194,7 +194,7 @@ def user():
                 return redirect(url_for('profile', id=session['logged_in_user']))
 
         else:
-            return render_template('user.html', form=form, title='user')
+            return render_template('signin.html', form=form, title='user')
 
 
 @app.route('/signup', methods = ['GET', 'POST'])
@@ -229,7 +229,7 @@ def signup():
                 db.session.add(user_info)
                 db.session.commit()
                 
-                return redirect(url_for('user'))
+                return redirect(url_for('signin'))
         
         else:
             return render_template('signup.html', form=form, title='sign_up')
@@ -240,7 +240,7 @@ def logout():
     "Route for logout."
     session.pop('logged_in_user', None)
 
-    return redirect(url_for('user'))
+    return redirect(url_for('signin'))
 
 
 @app.before_request
