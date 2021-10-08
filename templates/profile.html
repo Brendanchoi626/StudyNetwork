@@ -2,16 +2,18 @@
 
 {% block content %}
 <main>
-<img src="/static/logo/sampleProfile.jpg" width="200px" height="200px">
+<div class="personal_info">
+<img src="/static/logo/sampleProfile.jpg" alt="profile pic" width="200px" height="200px">
 <!-- Logout button -->
 <p class="username"><strong>{{ user.username }}</strong></p>
 <p>Email address: {{ user.email }}</p>
+
 {% if g.logged_in_user == user.id %}
     <div class="logout">
     <button onclick="window.location = 'http://127.0.0.1:5000/logout'" type="submit">Logout</button>
     </div>
 {% endif %}
-
+</div>
 <div class="profile">
 {% for each_post in post %}
     <p><a class="title" href="/comment/{{each_post.id}}"><strong>{{each_post.title}}</strong></a><br>
