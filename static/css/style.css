@@ -65,11 +65,17 @@ nav li a img{
 /* ------ */
 footer{
   list-style-type: none;
-    margin: 0;
-    padding: 10px;
-    overflow: hidden;
-    background-color: black;
-    color: white;
+  margin: 0;
+  padding: 10px;
+  overflow: hidden;
+  background-color: black;
+  border-top: 3px solid grey;
+}
+footer ul li{
+  color: white;
+}
+footer ul li a{
+  color: white;
 }
 
 /* HOME */
@@ -325,7 +331,7 @@ form {
     width: 60%;
     margin-left: 20%;
   }
-  nav ul .size_adjust_div {
+  ul .size_adjust_div {
     width: 60%;
     margin-left: 20%;
   }
