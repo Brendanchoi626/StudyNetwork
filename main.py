@@ -10,7 +10,7 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
-
+from sqlalchemy import desc
 
 #SQL query executer
 def sqlite_conn(database, query, single=False):
@@ -38,7 +38,7 @@ from forms import Sign_in, Sign_up, Post, Comment
 def home():
     "The homepage route"
     # gets all the posts in the database
-    post = models.Post.query.all().order_by
+    post = models.Post.query.order_by(desc(models.Post.id)).all()
     number_of_items = 0
     for p in post:
         number_of_items += 1
@@ -150,8 +150,6 @@ def profile(id):
     if g.logged_in_user:
         logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first_or_404()
         return render_template('profile.html', user=user_info, post=post_info, loginuser=logged_in_user_info)
-    elif g.logged_in_user == None:
-        abort(404)
     else:
         return render_template('profile.html', user=user_info, post=post_info)
 
