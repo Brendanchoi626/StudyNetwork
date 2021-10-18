@@ -38,7 +38,7 @@ from forms import Sign_in, Sign_up, Post, Comment
 def home():
     "The homepage route"
     # gets all the posts in the database
-    post = models.Post.query.all()
+    post = models.Post.query.all().order_by
     number_of_items = 0
     for p in post:
         number_of_items += 1

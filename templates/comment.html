@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+<main>
 <p>{{ post_info.discussion }}</p>
 {% for comment in comments %}
     <p><a class="name"href="/profile/{{comment.post.id}}"><strong>{{comment.post.username}}</strong></a> {{ comment.comment }}</p>
@@ -10,5 +11,5 @@
     {{ form.comment }}
     <input type="submit" value="Post">
 </form>
-
+</main>
 {% endblock %}
