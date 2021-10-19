@@ -9,18 +9,37 @@
 <p>Email address: {{ user.email }}</p>
 
 {% if g.logged_in_user == user.id %}
+    <div class="manage_profile">
+        <button onclick="manageProfile()">manage post</button>
+        <button onclick="">edit profile</button>
+    </div>
     <div class="logout">
-    <button onclick="window.location = 'http://127.0.0.1:5000/logout'" type="submit">Logout</button>
+        <button onclick="window.location = 'http://127.0.0.1:5000/logout'" type="submit">Logout</button>
     </div>
 {% endif %}
 </div>
-<div class="profile">
+<div class="profile" id="pro">
 {% for each_post in post %}
-    <p><a class="title" href="/comment/{{each_post.id}}"><strong>{{each_post.title}}</strong></a><br>
-    <a class="discussion" href="/comment/{{each_post.id}}">{{each_post.discussion}}</a></p>
+    {% if g.logged_in_user %}     
+        <p><a href="/delete_post/{{each_post.id}}"><img id=manageProfile src="/static/logo/red X.jpg" alt="click to delete"></a>
+            <a class="title" href="/comment/{{each_post.id}}"><strong>{{each_post.title}}</strong></a><br>
+        <a class="discussion" href="/comment/{{each_post.id}}">{{each_post.discussion}}</a></p>
+    {% else %}
+        <p><a class="title" href="/signin"><strong>{{each_post.title}}</strong></a><br>
+        <a class="discussion" href="/signin">{{each_post.discussion}}</a></p>
+    {% endif %}
 {% endfor %}
 
 </div>
+
+<script>
+    function manageProfile() {
+        document.querySelectorAll(".profile p img").forEach(function (element) {
+            element.style.display = "block";
+        })
+        // document.getElementById("pro").getElementsByTagName("p").getElementsByTagName("img").style.display="block";
+    }
+</script>
 
 </main>
 {% endblock %}

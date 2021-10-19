@@ -95,7 +95,7 @@ footer ul li a{
   grid-column: 1;
   grid-row: 1;
   margin-right: 2%;
-  border-bottom: rgb(155, 158, 0) solid 3px;
+  border-bottom: rgb(160, 160, 160) solid 3px;
 }
 
 .discussion{
@@ -105,7 +105,7 @@ footer ul li a{
   margin-right: 2%;
   padding-left: 1%;
   padding-top:1%;
-  border-left: rgb(236, 247, 93) solid 3px;
+  border-left: rgb(252, 229, 128) solid 3px;
 }
 
 .other_information{
@@ -221,6 +221,18 @@ form {
   color: #888;
 }
 
+.profile p img{
+  width: fit-content;
+  height: auto;
+  max-width: 20px;
+  float: right;
+  display: none;
+}
+
+.profile p img:hover{
+  opacity: 0.5;
+}
+
 .profile p .discussion{
   display: block;
   padding: 1%;
@@ -246,12 +258,24 @@ form {
   height: auto;
   border: 1px solid black;
   cursor: pointer;
-  padding: 14px 20px;
+  padding: 7px 10px;
   margin: 8px 0;
   opacity: 0.9;
 }
+.manage_profile button{
+  color: white;
+  background-color: rgb(160, 160, 160);
+  width: 100px;
+  height: auto;
+  border: 1px solid black;
+  cursor: pointer;
+  padding: 7px 10px;
+  margin: 8px 0;
+  opacity: 0.9;
 
-.logout button:hover{
+}
+
+.logout button:hover, .manage_profile button:hover{
   opacity: 1;
 }
 
@@ -315,6 +339,10 @@ form {
 }
 
 /* ------- */
+/* comment */
+/* ------- */
+
+/* ------- */
 /*404_error*/
 /* ------- */
 .error img{
@@ -342,7 +370,7 @@ form {
   .profile{
     grid-template-columns: 33.33% 33.33% 33.34%;
   }
-  .logout button{
+  .logout button, .manage_profile button{
     width: 10%;
   }
 }

@@ -154,6 +154,16 @@ def profile(id):
         return render_template('profile.html', user=user_info, post=post_info)
 
 
+@app.route('/delete_post/<int:id>')
+def delete_post(id):
+    "A route that allows the players to delete their post"
+    post_to_delete = models.Post.query.filter_by(id = id).first_or_404()
+    post_to_delete = db.session.merge(post_to_delete)
+    db.session.delete(post_to_delete)
+    db.session.commit()
+    return redirect(url_for('profile', id=session["logged_in_user"]))
+
+
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     "Sign in route. Checks if the user information is correct and redirects to profile page."    
