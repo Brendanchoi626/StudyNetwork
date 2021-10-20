@@ -146,7 +146,7 @@ def profile(id):
     "Profile route. If the user is signed in, it returns the profile page with user info. Else returns signup page"
     #Shows the basic information of a user with a certain id. 
     user_info = models.User.query.filter_by(id = id).first_or_404()
-    post_info = models.Post.query.filter_by(user_id = id).all()
+    post_info = models.Post.query.filter_by(user_id = id).order_by(desc(models.Post.id)).all()
     if g.logged_in_user:
         logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first_or_404()
         return render_template('profile.html', user=user_info, post=post_info, loginuser=logged_in_user_info)
@@ -249,6 +249,15 @@ def logout():
     session.pop('logged_in_user', None)
 
     return redirect(url_for('signin'))
+
+@app.context_processor
+def notification_processor():
+    "used to pass on the number of notifications to the nav bar"
+    if  g.logged_in_user:
+        num_notification = models.Notification.query.filter_by(user_id = session["logged_in_user"]).all()
+        return dict(num_notification = len(num_notification))
+    else:
+        return dict(num_notification = "No one is logged in")
 
 
 @app.before_request

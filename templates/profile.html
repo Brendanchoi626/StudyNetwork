@@ -6,9 +6,9 @@
 <img src="/static/logo/sampleProfile.jpg" alt="profile pic" width="200px" height="200px">
 <!-- Logout button -->
 <p class="username"><strong>{{ user.username }}</strong></p>
-<p>Email address: {{ user.email }}</p>
 
 {% if g.logged_in_user == user.id %}
+    <p>Email address: {{ user.email }}</p>
     <div class="manage_profile">
         <button onclick="manageProfile()">manage post</button>
         <button onclick="">edit profile</button>

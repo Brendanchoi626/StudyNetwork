@@ -63,6 +63,20 @@ nav li a img{
   width: 100%;
   height: 50px;
 }
+nav .notification{
+  position: relative;
+}
+
+nav li a .badge{
+  position:absolute;
+  border-radius: 50%;
+  border: solid 1px black;
+  width: 25px;
+  height: 25px;
+  top: 0.5px;
+  left: 75px;
+  background-color: orange;
+}
 
 /* ------ */
 /* Footer */
