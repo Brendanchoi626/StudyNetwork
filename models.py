@@ -74,7 +74,7 @@ class Category(db.Model):
 class Comment(db.Model):
     __tablename__ = 'Comment'
     id = db.Column(db.Integer, primary_key=True)
-    Post_id = db.Column(db.Integer, db.ForeignKey('Post.id'), nullable = False)
+    Post_id = db.Column(db.Integer, db.ForeignKey('Post.id'), nullable = True)
     User_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable = False)
     comment = db.Column(db.Text, nullable = False)
 

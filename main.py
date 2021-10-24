@@ -41,6 +41,12 @@ def home():
     "The homepage route"
     # gets all the posts in the database
     post = models.Post.query.order_by(desc(models.Post.id)).all()
+    #The code below deletes the unwated comments(which are meant to be deleten) to free up the comment database
+    # comment_to_delete = models.Comment.query.filter_by(Post_id = Null).all()
+    # for x in range(len(comment_to_delete)):
+    #     db.session.delete(db.session.merge(comment_to_delete[x]))
+    # db.session.commit()
+
     number_of_items = 0
     for p in post:
         number_of_items += 1
@@ -152,7 +158,6 @@ def mark_read(id, pid, bid): #pid is post id
 
     elif bid == 0:
         noti_to_delete = models.Notification.query.filter_by(user_id = session["logged_in_user"]).all()     
-        print(noti_to_delete)  
         for x in range(len(noti_to_delete)):
             db.session.delete(db.session.merge(noti_to_delete[x]))
         db.session.commit()
@@ -181,8 +186,11 @@ def profile(id):
 def delete_post(id):
     "A route that allows the players to delete their post"
     post_to_delete = models.Post.query.filter_by(id = id).first_or_404()
+    noti_to_delete = models.Notification.query.filter_by(post_id = id).all()
     post_to_delete = db.session.merge(post_to_delete)
     db.session.delete(post_to_delete)
+    for x in range(len(noti_to_delete)):#These codes will delete the notifications which were associated to 
+            db.session.delete(db.session.merge(noti_to_delete[x]))# the deleted post, 
     db.session.commit()
     return redirect(url_for('profile', id=session["logged_in_user"]))
 
