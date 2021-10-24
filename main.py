@@ -1,4 +1,5 @@
 # imports
+import re
 import sqlite3
 from flask import Flask, render_template, request, session, redirect, url_for, Blueprint, g, abort
 import flask_sqlalchemy
@@ -11,6 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
 from sqlalchemy import desc
+
 
 #SQL query executer
 def sqlite_conn(database, query, single=False):
@@ -49,17 +51,19 @@ def home():
 def comment(id):
     "Route for comment"
     form = Comment()
-
     post_info = db.session.query(models.Post).filter_by(id = id).first_or_404()
     user_info = db.session.query(models.User).filter_by(id = session['logged_in_user']).first()
     comments = db.session.query(models.Comment).filter_by(Post_id = id).all()
+
     # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
         return redirect(url_for('signin'))
 
     elif request.method == 'GET':# display all the comments in the post
+
         if comments == Null:
             return render_template('comment.html', form=form, post_info=post_info)
+
         else:
             return render_template('comment.html', form=form, comments=comments, post_info=post_info)
 
@@ -70,8 +74,8 @@ def comment(id):
             comment_info.User_id = session['logged_in_user']
             comment_info.comment = form.comment.data
             db.session.add(comment_info)
-
             post_info.comments += 1
+
             if user_info.id != post_info.user_id:
                 notification_info = models.Notification()
                 notification_info.user_id = post_info.user_id
@@ -89,6 +93,7 @@ def comment(id):
 def post():
     "Route for post. Allows the player to make new posts."
     form = Post()
+
     # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
         return redirect(url_for('signin'))
@@ -108,6 +113,7 @@ def post():
             post_info.user_id = session['logged_in_user']            
             print(post_info.id)
             post_info = db.session.merge(post_info)
+
             for catego in form.category.data: 
                 category = db.session.query(models.Category).filter_by(id = catego).first()
                 post_info.categories_post.append(category)
@@ -115,7 +121,7 @@ def post():
             db.session.add(post_info)
             db.session.commit()
             return redirect(url_for('home'))
-         
+
     return render_template('post.html', form=form, title='post')
         
 
@@ -125,20 +131,35 @@ def notification():
     # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
         return redirect(url_for('signin'))
+
     else: 
         #Show all the notification to the user 
-        Noti = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()
-        return render_template('noti.html', noti=Noti, title='noti')
+        notifications = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()
+        return render_template('notification.html', notifications=notifications, title='notification')
 
 
-@app.route('/mark_read/<int:id>/<int:pid>')
-def mark_read(id, pid):
+@app.route('/mark_read/<int:id>/<int:pid>/<int:bid>', methods=['GET'])#bid is a short for boolean id
+def mark_read(id, pid, bid): #pid is post id
     "A route that deletes the notifications which are read"
-    noti_to_delete = models.Notification.query.filter_by(id = id).first_or_404()
-    noti_to_delete = db.session.merge(noti_to_delete)
-    db.session.delete(noti_to_delete)
-    db.session.commit()
-    return redirect(url_for('comment', id=pid))
+    notifications = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()
+
+    if bid == 1:
+        noti_to_delete = models.Notification.query.filter_by(id = id).first_or_404()
+        noti_to_delete = db.session.merge(noti_to_delete)
+        db.session.delete(noti_to_delete)
+        db.session.commit()
+        return redirect(url_for('comment', id=pid))
+
+    elif bid == 0:
+        noti_to_delete = models.Notification.query.filter_by(user_id = session["logged_in_user"]).all()     
+        print(noti_to_delete)  
+        for x in range(len(noti_to_delete)):
+            db.session.delete(db.session.merge(noti_to_delete[x]))
+        db.session.commit()
+        return redirect(url_for('notification'))
+
+    else:
+        abort(404)
 
 
 @app.route('/profile/<int:id>')
@@ -147,9 +168,11 @@ def profile(id):
     #Shows the basic information of a user with a certain id. 
     user_info = models.User.query.filter_by(id = id).first_or_404()
     post_info = models.Post.query.filter_by(user_id = id).order_by(desc(models.Post.id)).all()
+
     if g.logged_in_user:
         logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first_or_404()
         return render_template('profile.html', user=user_info, post=post_info, loginuser=logged_in_user_info)
+
     else:
         return render_template('profile.html', user=user_info, post=post_info)
 
@@ -188,7 +211,7 @@ def signin():
                     passwith = check_password_hash(usern.password, password)                             
                 except:
                     passwith = check_password_hash(usere.password, password)
-                finally:
+                finally:                  
                     if not passwith:
                         return render_template('signin.html', form=form, error = 'please check your username/password again') 
 
@@ -236,9 +259,8 @@ def signup():
                 )
                 db.session.add(user_info)
                 db.session.commit()
-                
-                return redirect(url_for('signin'))
-        
+                return redirect(url_for('signin'))     
+
         else:
             return render_template('signup.html', form=form, title='sign_up')
 
@@ -247,15 +269,20 @@ def signup():
 def logout():
     "Route for logout."
     session.pop('logged_in_user', None)
-
     return redirect(url_for('signin'))
+
 
 @app.context_processor
 def notification_processor():
     "used to pass on the number of notifications to the nav bar"
     if  g.logged_in_user:
         num_notification = models.Notification.query.filter_by(user_id = session["logged_in_user"]).all()
-        return dict(num_notification = len(num_notification))
+        if len(num_notification) > 99:
+            return dict(num_notification = "99..") #When the number of notification is too big, it just shows 99+.
+
+        else:   
+            return dict(num_notification = len(num_notification))
+
     else:
         return dict(num_notification = "No one is logged in")
 
@@ -271,5 +298,7 @@ def before_request():
 @app.errorhandler(404)
 def return_error(e):
     return render_template('404.html'), 404
+
+
 if __name__ == "__main__":
     app.run(debug=True)
