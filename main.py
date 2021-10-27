@@ -41,11 +41,6 @@ def home():
     "The homepage route"
     # gets all the posts in the database
     post = models.Post.query.order_by(desc(models.Post.id)).all()
-    #The code below deletes the unwated comments(which are meant to be deleten) to free up the comment database
-    # comment_to_delete = models.Comment.query.filter_by(Post_id = Null).all()
-    # for x in range(len(comment_to_delete)):
-    #     db.session.delete(db.session.merge(comment_to_delete[x]))
-    # db.session.commit()
 
     number_of_items = 0
     for p in post:
@@ -117,7 +112,6 @@ def post():
             post_info.date = date.today().strftime("%d%m%Y")
             post_info.comments = 0
             post_info.user_id = session['logged_in_user']            
-            print(post_info.id)
             post_info = db.session.merge(post_info)
 
             for catego in form.category.data: 
@@ -212,7 +206,7 @@ def signin():
             session.pop('logged_in_user', None)
             #Check if the username/password is matching
             if usern == None and usere == None:
-                return render_template('signin.html', form=form, error = 'please check your username/password again')
+                return render_template('signin.html', form=form, error = 'Typed username/email does not exist. Please sign up first. ')
 
             else:
                 try:
@@ -221,7 +215,7 @@ def signin():
                     passwith = check_password_hash(usere.password, password)
                 finally:                  
                     if not passwith:
-                        return render_template('signin.html', form=form, error = 'please check your username/password again') 
+                        return render_template('signin.html', form=form, error = 'Unable to signin. Please check your username/password again') 
 
             #redirects profile if it matches
             if usere == None:
@@ -233,7 +227,7 @@ def signin():
                 return redirect(url_for('profile', id=session['logged_in_user']))
 
         else:
-            return render_template('signin.html', form=form, title='user')
+            return render_template('signin.html', form=form, title='user', error = 'Unable to signin. Please check your username/password again')
 
 
 @app.route('/signup', methods = ['GET', 'POST'])
@@ -270,7 +264,7 @@ def signup():
                 return redirect(url_for('signin'))     
 
         else:
-            return render_template('signup.html', form=form, title='sign_up')
+            return render_template('signup.html', form=form, title='sign_up', error='The email is invalid')
 
 
 @app.route('/logout')

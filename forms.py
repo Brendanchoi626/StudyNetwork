@@ -4,7 +4,8 @@ from flask_wtf.form import FlaskForm
 from flask_wtf.recaptcha import validators
 from wtforms import widgets, SelectMultipleField, SubmitField, PasswordField
 from wtforms.fields.simple import HiddenField, TextField, TextAreaField
-from wtforms.validators import DataRequired, Optional, ValidationError
+from wtforms.fields.html5 import EmailField
+from wtforms.validators import DataRequired, Email, Optional, ValidationError
 from wtforms.widgets.core import TextArea
 import models
 from flask import session
@@ -25,7 +26,7 @@ class Post(FlaskForm):
 
 class Sign_up(FlaskForm):
     username = TextField('username', validators=[DataRequired()])
-    email = TextField('email', validators=[DataRequired()])
+    email = EmailField('email', validators=[DataRequired(), Email()])
     password = PasswordField('password', validators=[DataRequired()])
     re_password = PasswordField('re-password', validators=[DataRequired()])
 
