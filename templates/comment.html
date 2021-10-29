@@ -5,12 +5,12 @@
 <h1>{{post_info.title}}</h1>
 <p>⚫ {{ post_info.discussion }}</p>
 {% for comment in comments %}
-    <p><a class="name"href="/profile/{{comment.post.id}}"><strong>{{comment.post.username}}</strong></a> {{ comment.comment }}</p>
+    <p><a class='name'href='/profile/{{comment.post.id}}'><strong>{{comment.post.username}}</strong></a> {{ comment.comment }}</p>
 {% endfor %}
-<form method="POST" enctype="multipart/form-data">
+<form method='POST' enctype='multipart/form-data'>
     {{ form.csrf_token }}
     {{ form.comment }}
-    <input type="submit" value="Post">
+    <input type='submit' value='Post'>
 </form>
 </main>
 {% endblock %}

@@ -38,6 +38,3 @@ class Sign_in(FlaskForm):
 
 class Comment(FlaskForm):
     comment = TextAreaField('Write your comment or reply here', validators=[DataRequired()])
-
-# class Notification(FlaskForm):
-    # tobe_deleted = HiddenField(None, None, None, None, None)

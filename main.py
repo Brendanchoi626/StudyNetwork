@@ -16,7 +16,7 @@ from sqlalchemy import desc
 
 #SQL query executer
 def sqlite_conn(database, query, single=False):
-    "connects to a database and returns data"
+    'connects to a database and returns data'
     conn = sqlite3.connect(database)
     cur = conn.cursor() 
     cur.execute(query) 
@@ -38,7 +38,7 @@ from forms import Sign_in, Sign_up, Post, Comment
 #routes#
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    "The homepage route"
+    'The homepage route'
     # gets all the posts in the database
     post = models.Post.query.order_by(desc(models.Post.id)).all()
 
@@ -50,7 +50,7 @@ def home():
 
 @app.route('/comment/<int:id>', methods=['GET', 'POST'])
 def comment(id):
-    "Route for comment"
+    'Route for comment'
     form = Comment()
     post_info = db.session.query(models.Post).filter_by(id = id).first_or_404()
     user_info = db.session.query(models.User).filter_by(id = session['logged_in_user']).first()
@@ -92,7 +92,7 @@ def comment(id):
 
 @app.route('/post', methods=['GET', 'POST'])
 def post():
-    "Route for post. Allows the player to make new posts."
+    'Route for post. Allows the player to make new posts.'
     form = Post()
 
     # when no one is logged in, tells the user to sign up
@@ -109,7 +109,7 @@ def post():
             post_info = models.Post()
             post_info.title = form.title.data
             post_info.discussion = form.discussion.data
-            post_info.date = date.today().strftime("%d%m%Y")
+            post_info.date = date.today().strftime('%d%m%Y')
             post_info.comments = 0
             post_info.user_id = session['logged_in_user']            
             post_info = db.session.merge(post_info)
@@ -127,20 +127,20 @@ def post():
 
 @app.route('/notification', methods=['GET', 'POST'])
 def notification():
-    "Notification route. Displays all notifications that belong to the logged in user."
+    'Notification route. Displays all notifications that belong to the logged in user.'
     # when no one is logged in, tells the user to sign up
     if g.logged_in_user == None:
         return redirect(url_for('signin'))
 
     else: 
         #Show all the notification to the user 
-        notifications = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()
+        notifications = models.Notification.query.filter_by(user_id = session['logged_in_user']).order_by(desc(models.Notification.id)).all()
         return render_template('notification.html', notifications=notifications, title='notification')
 
 
 @app.route('/mark_read/<int:id>/<int:pid>/<int:bid>', methods=['GET'])#bid is a short for boolean id
 def mark_read(id, pid, bid): #pid is post id
-    "A route that deletes the notifications which are read"
+    'A route that deletes the notifications which are read'
     notifications = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()
 
     if bid == 1:
@@ -151,7 +151,7 @@ def mark_read(id, pid, bid): #pid is post id
         return redirect(url_for('comment', id=pid))
 
     elif bid == 0:
-        noti_to_delete = models.Notification.query.filter_by(user_id = session["logged_in_user"]).all()     
+        noti_to_delete = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()     
         for x in range(len(noti_to_delete)):
             db.session.delete(db.session.merge(noti_to_delete[x]))
         db.session.commit()
@@ -163,13 +163,13 @@ def mark_read(id, pid, bid): #pid is post id
 
 @app.route('/profile/<int:id>')
 def profile(id):
-    "Profile route. If the user is signed in, it returns the profile page with user info. Else returns signup page"
+    'Profile route. If the user is signed in, it returns the profile page with user info. Else returns signup page'
     #Shows the basic information of a user with a certain id. 
     user_info = models.User.query.filter_by(id = id).first_or_404()
     post_info = models.Post.query.filter_by(user_id = id).order_by(desc(models.Post.id)).all()
 
     if g.logged_in_user:
-        logged_in_user_info = models.User.query.filter_by(id = session["logged_in_user"]).first_or_404()
+        logged_in_user_info = models.User.query.filter_by(id = session['logged_in_user']).first_or_404()
         return render_template('profile.html', user=user_info, post=post_info, loginuser=logged_in_user_info)
 
     else:
@@ -178,7 +178,7 @@ def profile(id):
 
 @app.route('/delete_post/<int:id>')
 def delete_post(id):
-    "A route that allows the players to delete their post"
+    'A route that allows the players to delete their post'
     post_to_delete = models.Post.query.filter_by(id = id).first_or_404()
     noti_to_delete = models.Notification.query.filter_by(post_id = id).all()
     post_to_delete = db.session.merge(post_to_delete)
@@ -186,19 +186,19 @@ def delete_post(id):
     for x in range(len(noti_to_delete)):#These codes will delete the notifications which were associated to 
             db.session.delete(db.session.merge(noti_to_delete[x]))# the deleted post, 
     db.session.commit()
-    return redirect(url_for('profile', id=session["logged_in_user"]))
+    return redirect(url_for('profile', id=session['logged_in_user']))
 
 
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
-    "Sign in route. Checks if the user information is correct and redirects to profile page."    
+    'Sign in route. Checks if the user information is correct and redirects to profile page.'    
     form = Sign_in()
 
     usern = models.User.query.filter_by(username = request.form.get('username_or_email')).first()
     usere = models.User.query.filter_by(email = request.form.get('username_or_email')).first()
     password = request.form.get('password')
 
-    if request.method == "GET": #If browser asked to see the page
+    if request.method == 'GET': #If browser asked to see the page
         return render_template('signin.html', form=form, title='user')
 
     else:#When the user clicks the sign_in button
@@ -232,9 +232,9 @@ def signin():
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def signup():
-    "Sign up route. Allows you to create a new account with the input information if possible."
+    'Sign up route. Allows you to create a new account with the input information if possible.'
     form = Sign_up()
-    if request.method == "GET": #If browser asked to see the page
+    if request.method == 'GET': #If browser asked to see the page
         return render_template('signup.html', form=form, title='sign_up')
     
     #When the user clicks the sign_up button
@@ -269,29 +269,29 @@ def signup():
 
 @app.route('/logout')
 def logout():
-    "Route for logout."
+    'Route for logout.'
     session.pop('logged_in_user', None)
     return redirect(url_for('signin'))
 
 
 @app.context_processor
 def notification_processor():
-    "used to pass on the number of notifications to the nav bar"
+    'used to pass on the number of notifications to the nav bar'
     if  g.logged_in_user:
-        num_notification = models.Notification.query.filter_by(user_id = session["logged_in_user"]).all()
+        num_notification = models.Notification.query.filter_by(user_id = session['logged_in_user']).all()
         if len(num_notification) > 99:
-            return dict(num_notification = "99..") #When the number of notification is too big, it just shows 99+.
+            return dict(num_notification = '99..') #When the number of notification is too big, it just shows 99+.
 
         else:   
             return dict(num_notification = len(num_notification))
 
     else:
-        return dict(num_notification = "No one is logged in")
+        return dict(num_notification = 'No one is logged in')
 
 
 @app.before_request
 def before_request():
-    "Called before the request, checks if anybody is logged in."
+    'Called before the request, checks if anybody is logged in.'
     g.logged_in_user = None
     if 'logged_in_user' in session:
         g.logged_in_user = session['logged_in_user']
@@ -302,5 +302,5 @@ def return_error(e):
     return render_template('404.html'), 404
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)

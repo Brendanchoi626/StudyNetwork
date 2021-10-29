@@ -3,12 +3,12 @@
 
 {% block content %}
 <main>
-<div class="notification">
+<div class='notification'>
 <h1>Unread notifications</h1>
 {% if notifications %}
     {% for notification in notifications %}
         <ul>
-            <li><a href="/mark_read/{{notification.id}}/{{notification.posts_notification.id}}/1"><strong>{{notification.sender}}</strong>
+            <li><a href='/mark_read/{{notification.id}}/{{notification.posts_notification.id}}/1'><strong>{{notification.sender}}</strong>
                  has made a reply to your post<strong>[{{notification.posts_notification.title}}]:</strong>
                 {{notification.content}} ➡</a>
             </li>

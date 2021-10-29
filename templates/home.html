@@ -4,26 +4,26 @@
 
 <main>
 <h1>All Questions</h1>
-<input type="text" id="search" onkeyup="SearchFilter()" 
-placeholder="Search for questions">
-<div id="questionList">
+<input type='text' id='search' onkeyup='SearchFilter()' 
+placeholder='Search for questions'>
+<div id='questionList'>
 {% for post in posts %}
-<div class="grid_container">
-    <h3 class="title">{{ post.title }}</h3>
-    <p class="discussion">{{ post.discussion }}</p> 
-    <div class="other_information">
-    <p>Posted by: <a class="name" id="name" href="/profile/{{post.post_user.id}}"><strong>{{ post.post_user.username }}</strong></a></p>
+<div class='grid_container'>
+    <h3 class='title'>{{ post.title }}</h3>
+    <p class='discussion'>{{ post.discussion }}</p> 
+    <div class='other_information'>
+    <p>Posted by: <a class='name' id='name' href='/profile/{{post.post_user.id}}'><strong>{{ post.post_user.username }}</strong></a></p>
     <p>date: {{ post.date }} 
     <p>comments: {{ post.comments }}</p>
-    <p class="tags">Tags: {% for catego in post.categories_post %}
+    <p class='tags'>Tags: {% for catego in post.categories_post %}
         {{catego.topic}}
         {% endfor %}
     </p>
-    </div class="comment_button">
+    </div class='comment_button'>
     {% if g.logged_in_user %}
-        <a href="/comment/{{post.id}}">💬</a>
+        <a href='/comment/{{post.id}}'>💬</a>
     {% else %}
-        <a href="/signin">💬</a>
+        <a href='/signin'>💬</a>
     {% endif %}
 </div>
 {% endfor %}
@@ -33,19 +33,19 @@ placeholder="Search for questions">
 function SearchFilter() {
     // listing all the variables
     var input, filter, questionList, question, title, i, txtValue;
-    input = document.getElementById("search")
+    input = document.getElementById('search')
     filter = input.value.toUpperCase();
-    questionList = document.getElementById("questionList")
-    question = questionList.getElementsByClassName("grid_container")
+    questionList = document.getElementById('questionList')
+    question = questionList.getElementsByClassName('grid_container')
 
     for (i=0; i < question.length; i++) {
-        title = question[i].getElementsByTagName("h3")[0];
+        title = question[i].getElementsByTagName('h3')[0];
 
         txtValue = title.textContent || title.innerText;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            question[i].style.display = "";
+            question[i].style.display = '';
         } else {
-            question[i].style.display = "none";
+            question[i].style.display = 'none';
         }
     }
 }
